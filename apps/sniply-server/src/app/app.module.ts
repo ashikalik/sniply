@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CreateLinkModule } from './create-link/create-link.module';
 import { ReadLinkModule } from './read-link/read-link.module';
+import { NavigateLinkModule } from './navigate-link/navigate-link.module';
 import { CreateSniplyLinks20260207122907 } from '../migrations/20260207122907-create-sniply-links';
 
 @Module({
@@ -26,6 +27,7 @@ import { CreateSniplyLinks20260207122907 } from '../migrations/20260207122907-cr
     }),
     CreateLinkModule,
     ReadLinkModule,
+    NavigateLinkModule,
   ],
   controllers: [AppController],
   providers: [AppService],
