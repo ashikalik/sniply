@@ -1,5 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { ISniplyLinkV1CreateRequest } from '@sniply/interfaces';
+import {
+  ISniplyLinkV1CreateRequest,
+} from '@sniply/interfaces';
 import { CreateLinkV1Service } from './create-link-v1.service';
 
 @Controller('links')
