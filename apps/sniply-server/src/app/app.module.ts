@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CreateLinkModule } from './create-link/create-link.module';
+import { ReadLinkModule } from './read-link/read-link.module';
 import { CreateSniplyLinks20260207122907 } from '../migrations/20260207122907-create-sniply-links';
 
 @Module({
@@ -24,6 +25,7 @@ import { CreateSniplyLinks20260207122907 } from '../migrations/20260207122907-cr
       migrations: [CreateSniplyLinks20260207122907],
     }),
     CreateLinkModule,
+    ReadLinkModule,
   ],
   controllers: [AppController],
   providers: [AppService],

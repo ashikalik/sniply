@@ -6,7 +6,7 @@ import {
 } from '@sniply/interfaces';
 
 @Injectable()
-export class CreateLinkV1CreateService implements ISniplyLinkV1Create {
+export class CreateLinkV1HelperService implements ISniplyLinkV1Create {
   constructor(
     private readonly postgresql: CreateLinkV1PostgresqlService,
   ) {}
