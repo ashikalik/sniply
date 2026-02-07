@@ -6,6 +6,7 @@ import {
 } from '@sniply/interfaces';
 import { SNIPLY_LINK_V1_CREATE } from './create-link-v1.tokens';
 import { randomBytes } from 'crypto';
+import { validateHttpUrl } from '../../common/url-validation';
 
 @Injectable()
 export class CreateLinkV1Service {
@@ -18,6 +19,7 @@ export class CreateLinkV1Service {
     if (!request.longUrl?.trim()) {
       throw new BadRequestException('longUrl is required');
     }
+    validateHttpUrl(request.longUrl);
 
     if (request.customAlias && request.customAlias.length > 16) {
       throw new BadRequestException('customAlias must be <= 16 characters');

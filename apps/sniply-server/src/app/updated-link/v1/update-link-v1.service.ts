@@ -5,6 +5,7 @@ import {
   ISniplyLinkV1UpdateRequest,
 } from '@sniply/interfaces';
 import { SNIPLY_LINK_V1_UPDATE } from './update-link-v1.tokens';
+import { validateHttpUrl } from '../../common/url-validation';
 
 @Injectable()
 export class UpdateLinkV1Service {
@@ -20,6 +21,9 @@ export class UpdateLinkV1Service {
 
     if (request.longUrl !== undefined && !request.longUrl.trim()) {
       throw new BadRequestException('longUrl cannot be empty');
+    }
+    if (request.longUrl !== undefined) {
+      validateHttpUrl(request.longUrl);
     }
 
     const patch: Partial<ISniplyLinkV1> = {};
