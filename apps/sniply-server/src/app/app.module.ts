@@ -8,6 +8,7 @@ import { ReadLinkModule } from './read-link/read-link.module';
 import { NavigateLinkModule } from './navigate-link/navigate-link.module';
 import { UpdatedLinkModule } from './updated-link/updated-link.module';
 import { DeleteLinkModule } from './delete-link/delete-link.module';
+import { LinkAnalyticsModule } from './link-analytics/link-analytics.module';
 import { CreateSniplyLinks20260207122907 } from '../migrations/20260207122907-create-sniply-links';
 import { CreateLinkClicks20260207140959 } from '../migrations/20260207140959-create-link-clicks';
 
@@ -36,6 +37,7 @@ import { CreateLinkClicks20260207140959 } from '../migrations/20260207140959-cre
     ReadLinkModule,
     NavigateLinkModule,
     DeleteLinkModule,
+    LinkAnalyticsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
