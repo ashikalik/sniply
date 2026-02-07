@@ -7,6 +7,7 @@ import { CreateLinkModule } from './create-link/create-link.module';
 import { ReadLinkModule } from './read-link/read-link.module';
 import { NavigateLinkModule } from './navigate-link/navigate-link.module';
 import { CreateSniplyLinks20260207122907 } from '../migrations/20260207122907-create-sniply-links';
+import { CreateLinkClicks20260207140959 } from '../migrations/20260207140959-create-link-clicks';
 
 @Module({
   imports: [
@@ -23,7 +24,10 @@ import { CreateSniplyLinks20260207122907 } from '../migrations/20260207122907-cr
       database: process.env.DB_NAME,
       autoLoadEntities: true,
       synchronize: false,
-      migrations: [CreateSniplyLinks20260207122907],
+      migrations: [
+        CreateSniplyLinks20260207122907,
+        CreateLinkClicks20260207140959,
+      ],
     }),
     CreateLinkModule,
     ReadLinkModule,
