@@ -1,12 +1,14 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { ISniplyLinkV1Read } from '@sniply/interfaces';
 import { SNIPLY_LINK_V1_READ } from './read-link-v1.tokens';
+import { ReadLinkV1Helper } from './read-link-v1.helper';
 
 @Injectable()
 export class ReadLinkV1Service {
   constructor(
     @Inject(SNIPLY_LINK_V1_READ)
     private readonly reader: ISniplyLinkV1Read,
+    private readonly helper: ReadLinkV1Helper,
   ) {}
 
   async findByCode(code: string) {
@@ -15,17 +17,6 @@ export class ReadLinkV1Service {
       throw new BadRequestException('Link not found');
     }
 
-    const baseUrl =
-      process.env.SHORT_BASE_URL ?? 'https://t.yourdomain.com';
-    const shortUrl = `${baseUrl.replace(/\/$/, '')}/${record.code}`;
-
-    return {
-      id: record.id,
-      code: record.code,
-      shortUrl,
-      longUrl: record.long_url,
-      expiresAt: record.expires_at?.toISOString() ?? null,
-      createdAt: record.created_at?.toISOString() ?? null,
-    };
+    return this.helper.toResponse(record);
   }
 }
