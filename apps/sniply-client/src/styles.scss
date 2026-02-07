@@ -1,2 +1,54 @@
-/* You can add global styles to this file, and also import other style files */
 @use "bootstrap/scss/bootstrap";
+
+/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+
+:root {
+  --sniply-bg: #f5f2ee;
+  --sniply-ink: #1a1a1a;
+  --sniply-ink-muted: #4b4b4b;
+  --sniply-accent: #ff6a3d;
+  --sniply-accent-2: #1f3c88;
+  --sniply-surface: #ffffff;
+  --sniply-border: #e6dfd7;
+}
+
+body {
+  font-family: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  background: radial-gradient(circle at 10% 10%, #fff7f0 0%, transparent 45%),
+    radial-gradient(circle at 90% 10%, #eef3ff 0%, transparent 45%),
+    var(--sniply-bg);
+  color: var(--sniply-ink);
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: "Space Grotesk", system-ui, -apple-system, sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.sniply-btn-primary {
+  background: var(--sniply-accent);
+  border-color: var(--sniply-accent);
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.sniply-btn-primary:hover {
+  background: #ff5a29;
+  border-color: #ff5a29;
+}
+
+.sniply-btn-secondary {
+  border-color: var(--sniply-ink);
+  color: var(--sniply-ink);
+  font-weight: 600;
+}
+
+.sniply-pill {
+  border: 1px solid var(--sniply-border);
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  background: #fff6f1;
+  color: var(--sniply-ink-muted);
+  font-size: 0.85rem;
+}

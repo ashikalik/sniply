@@ -1,6 +1,9 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary border-bottom">
+<nav class="navbar navbar-expand-lg navbar-light sniply-header">
   <div class="container">
-    <a class="navbar-brand fw-semibold" routerLink="/">Sniply</a>
+    <a class="navbar-brand fw-semibold d-flex align-items-center gap-2" routerLink="/">
+      <span class="brand-dot"></span>
+      Sniply
+    </a>
     <button
       class="navbar-toggler"
       type="button"
@@ -19,16 +22,23 @@
           <a class="nav-link" routerLink="/" routerLinkActive="active">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Links</a>
+          <a class="nav-link" routerLink="/features" routerLinkActive="active">Features</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Analytics</a>
+          <a class="nav-link" routerLink="/resources" routerLinkActive="active">Resources</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/pricing" routerLinkActive="active">Pricing</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Developers</a>
         </li>
       </ul>
 
-      <div class="d-flex gap-2">
-        <button class="btn btn-outline-secondary" type="button">Sign in</button>
-        <button class="btn btn-primary" type="button">Create link</button>
+      <div class="d-flex gap-2 align-items-center">
+        <a class="btn btn-link text-decoration-none text-body" routerLink="/login">Sign in</a>
+        <button class="btn sniply-btn-secondary" type="button">Talk to sales</button>
+        <a class="btn sniply-btn-primary" routerLink="/register">Get started</a>
       </div>
     </div>
   </div>

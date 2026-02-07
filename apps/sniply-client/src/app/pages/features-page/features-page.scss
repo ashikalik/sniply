@@ -1,0 +1,45 @@
+.features-page {
+  padding: 3rem 0 5rem;
+}
+
+.features-hero {
+  padding: 2rem 0 3rem;
+}
+
+.features-section {
+  padding: 2.5rem 0;
+}
+
+.features-section.alt {
+  background: #ffffff;
+}
+
+.feature-card {
+  background: var(--sniply-surface);
+  border: 1px solid var(--sniply-border);
+  border-radius: 20px;
+  padding: 1.5rem;
+  height: 100%;
+}
+
+.feature-card .icon {
+  font-size: 1.6rem;
+  margin-bottom: 0.75rem;
+}
+
+.cta-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  background: linear-gradient(135deg, #ffe1d6, #eaf1ff);
+  border-radius: 24px;
+  padding: 2.5rem;
+}
+
+@media (min-width: 992px) {
+  .cta-card {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}

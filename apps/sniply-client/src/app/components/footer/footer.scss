@@ -1,3 +1,23 @@
-.footer a:hover {
-  color: var(--bs-body-color);
+.footer {
+  background: #ffffff;
+  border-top: 1px solid var(--sniply-border);
+}
+
+.footer .brand-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--sniply-accent);
+  box-shadow: 0 0 0 4px rgba(255, 106, 61, 0.15);
+}
+
+.footer-link {
+  color: var(--sniply-ink-muted);
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: 0.4rem;
+}
+
+.footer-link:hover {
+  color: var(--sniply-ink);
 }
