@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "s:ss": "NX_TUI=false nx serve sniply-server"
+  },
   "devDependencies": {
     "@eslint/js": "^9.8.0",
     "@nestjs/schematics": "^11.0.0",
