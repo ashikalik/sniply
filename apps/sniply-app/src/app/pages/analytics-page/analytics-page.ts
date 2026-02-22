@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import {
   FormBuilder,
   ReactiveFormsModule,
@@ -35,6 +35,7 @@ export class AnalyticsPage implements OnInit {
   private readonly http = inject(HttpClient);
   private readonly fb = inject(FormBuilder);
   private readonly route = inject(ActivatedRoute);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   protected loading = false;
   protected errorMessage = '';
@@ -70,7 +71,7 @@ export class AnalyticsPage implements OnInit {
     const { fromIso, toIso } = this.getLast24HoursRange();
 
     this.http
-      .get<IAnalyticsResponse>(
+      .get<IAnalyticsResponse | string>(
         `${environment.api.baseUrl}${environment.endpoints.linksAnalyticsPrefix}/${encodeURIComponent(code)}/analytics`,
         {
           params: {
@@ -81,14 +82,17 @@ export class AnalyticsPage implements OnInit {
       )
       .subscribe({
         next: (response) => {
+          const normalized = this.normalizeResponse(response);
           this.loading = false;
-          this.data = response;
+          this.data = normalized;
+          this.cdr.markForCheck();
         },
         error: (error: { error?: { message?: string } }) => {
           this.loading = false;
           this.data = null;
           this.errorMessage =
             error?.error?.message ?? 'Failed to load analytics data.';
+          this.cdr.markForCheck();
         },
       });
   }
@@ -99,6 +103,36 @@ export class AnalyticsPage implements OnInit {
     return {
       fromIso: from.toISOString(),
       toIso: to.toISOString(),
+    };
+  }
+
+  private normalizeResponse(response: IAnalyticsResponse | string): IAnalyticsResponse {
+    const fallback: IAnalyticsResponse = {
+      code: this.analyticsForm.controls.code.value,
+      from: null,
+      to: null,
+      total: 0,
+      clicks: [],
+    };
+
+    const parsed = (() => {
+      if (typeof response !== 'string') {
+        return response;
+      }
+
+      try {
+        return JSON.parse(response) as IAnalyticsResponse;
+      } catch {
+        return fallback;
+      }
+    })();
+
+    return {
+      code: parsed.code ?? fallback.code,
+      from: parsed.from ?? null,
+      to: parsed.to ?? null,
+      total: Number(parsed.total ?? 0),
+      clicks: Array.isArray(parsed.clicks) ? parsed.clicks : [],
     };
   }
 }
