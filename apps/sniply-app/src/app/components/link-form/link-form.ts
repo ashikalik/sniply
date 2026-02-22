@@ -1,4 +1,12 @@
-import { Component, Input, OnChanges, SimpleChanges, inject } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  inject,
+} from '@angular/core';
 import {
   FormBuilder,
   ReactiveFormsModule,
@@ -13,13 +21,17 @@ import {
 })
 export class LinkFormComponent implements OnChanges {
   @Input() prefillTargetUrl = '';
+  @Input() isSubmitting = false;
+  @Output() formSubmit = new EventEmitter<{
+    longUrl: string;
+    expiresAt: string | null;
+    maxClicks: number | null;
+  }>();
 
   private readonly fb = inject(FormBuilder);
 
   protected readonly form = this.fb.nonNullable.group({
     destinationUrl: ['', [Validators.required]],
-    slug: [''],
-    campaign: [''],
   });
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -34,5 +46,12 @@ export class LinkFormComponent implements OnChanges {
       this.form.markAllAsTouched();
       return;
     }
+
+    const { destinationUrl } = this.form.getRawValue();
+    this.formSubmit.emit({
+      longUrl: destinationUrl.trim(),
+      expiresAt: null,
+      maxClicks: null,
+    });
   }
 }

@@ -15,10 +15,12 @@ export class UpdateLinkV1PostgresqlService implements ISniplyLinkV1Update {
   async updateByCode(
     code: string,
     patch: Partial<ISniplyLinkV1>,
+    userId: string,
   ): Promise<ISniplyLinkV1 | null> {
     const record = await this.repo.findOne({
       where: {
         code,
+        created_by_user_id: userId,
         deleted_at: IsNull(),
       },
     });

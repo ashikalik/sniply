@@ -2,7 +2,14 @@
   <h1 class="h3 mb-0">Create Link</h1>
   <article class="card border-0 shadow-sm">
     <div class="card-body">
-      <app-link-form [prefillTargetUrl]="(prefillTargetUrl$ | async) ?? ''"></app-link-form>
+      @if (errorMessage) {
+        <div class="alert alert-danger" role="alert">{{ errorMessage }}</div>
+      }
+      <app-link-form
+        [prefillTargetUrl]="(prefillTargetUrl$ | async) ?? ''"
+        [isSubmitting]="isSubmitting"
+        (formSubmit)="createLink($event)"
+      ></app-link-form>
     </div>
   </article>
 </section>

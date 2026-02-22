@@ -11,12 +11,29 @@ export class ReadLinkV1PostgresqlService implements ISniplyLinkV1Read {
     private readonly repo: Repository<SniplyLinkV1Entity>,
   ) {}
 
-  async findByCode(code: string) {
+  async findByCode(code: string, userId: string) {
     return this.repo.findOne({
       where: {
         code,
+        created_by_user_id: userId,
         deleted_at: IsNull(),
       },
     });
+  }
+
+  async list(page: number, limit: number, userId: string) {
+    const [items, total] = await this.repo.findAndCount({
+      where: {
+        created_by_user_id: userId,
+        deleted_at: IsNull(),
+      },
+      order: {
+        created_at: 'DESC',
+      },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+
+    return { items, total };
   }
 }

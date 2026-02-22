@@ -3,6 +3,7 @@ import { ISniplyLinkClickV1 } from '../database/sniply-link-click-v1-db.interfac
 export interface ISniplyLinkV1Analytics {
   getByCode(
     code: string,
+    userId: string,
     from?: Date,
     to?: Date,
   ): Promise<{

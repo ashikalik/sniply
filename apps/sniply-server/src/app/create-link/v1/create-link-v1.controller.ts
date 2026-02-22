@@ -9,7 +9,7 @@ import { IAuthRequest } from '@sniply/authentication';
 export class CreateLinkV1Controller {
   constructor(private readonly service: CreateLinkV1Service) {}
 
-  @Post()
+  @Post('create')
   create(
     @Body() body: ISniplyLinkV1CreateRequest,
     @Req() req: IAuthRequest,

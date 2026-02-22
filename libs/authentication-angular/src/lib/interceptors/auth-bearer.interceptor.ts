@@ -54,6 +54,7 @@ export const authBearerInterceptor: HttpInterceptorFn = (
       return refreshService.refreshOnce().pipe(
         switchMap((ok) => {
           if (!ok) {
+            redirectToUnauthorized(config.unauthorizedRedirectUrl);
             return throwError(() => error);
           }
 
@@ -69,3 +70,11 @@ export const authBearerInterceptor: HttpInterceptorFn = (
     }),
   );
 };
+
+function redirectToUnauthorized(redirectUrl?: string) {
+  if (!redirectUrl || typeof window === 'undefined') {
+    return;
+  }
+
+  window.location.assign(redirectUrl);
+}

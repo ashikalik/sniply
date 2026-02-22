@@ -1,4 +1,9 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import {
   ISniplyLinkV1,
   ISniplyLinkV1Create,
@@ -16,6 +21,10 @@ export class CreateLinkV1Service {
   ) {}
 
   async create(request: ISniplyLinkV1CreateRequest, userId?: string) {
+    if (!userId) {
+      throw new UnauthorizedException('Missing user in access token');
+    }
+
     if (!request.longUrl?.trim()) {
       throw new BadRequestException('longUrl is required');
     }
@@ -31,12 +40,13 @@ export class CreateLinkV1Service {
     const record: Partial<ISniplyLinkV1> = {
       code,
       long_url: request.longUrl,
+      domain: request.domain?.trim() || null,
       expires_at: request.expiresAt ? new Date(request.expiresAt) : null,
       max_clicks: request.maxClicks ?? null,
       is_active: true,
       click_count: 0,
       password_hash: request.password ?? null,
-      created_by_user_id: userId ?? null,
+      created_by_user_id: userId,
       created_at: now,
       updated_at: now,
     };

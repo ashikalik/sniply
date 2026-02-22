@@ -17,3 +17,17 @@
   align-items: center;
   justify-content: center;
 }
+
+.user-chip {
+  background: #eaf1ff;
+  color: #0b57d0;
+  border-color: #d8e5ff !important;
+}
+
+.search-form {
+  width: min(340px, 100%);
+}
+
+.dropdown-item-text {
+  max-width: 220px;
+}

@@ -1,24 +1,122 @@
 <section class="d-grid gap-3">
-  <h1 class="h3 mb-0">Link List</h1>
+  <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap">
+    <h1 class="h3 mb-0">Link List</h1>
+    <div class="d-flex align-items-center gap-2">
+      <button
+        class="btn btn-outline-danger btn-sm"
+        type="button"
+        [disabled]="selectedCount === 0 || deletingSelected"
+        (click)="promptDeleteSelected()"
+      >
+        Delete
+      </button>
+      <a class="btn btn-primary btn-sm" routerLink="/link-form">Create link</a>
+    </div>
+  </div>
   <article class="card border-0 shadow-sm">
     <div class="card-body">
+      @if (errorMessage) {
+        <div class="alert alert-danger" role="alert">{{ errorMessage }}</div>
+      }
+
       <div class="table-responsive">
         <table class="table table-hover mb-0">
           <thead>
             <tr>
-              <th>Title</th>
+              <th>
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  [checked]="allSelected"
+                  [disabled]="links.length === 0 || loading"
+                  (change)="toggleAll($any($event.target).checked)"
+                />
+              </th>
+              <th>Code</th>
               <th>Short URL</th>
-              <th>Clicks</th>
-              <th>Status</th>
+              <th>Long URL</th>
+              <th>Created</th>
+              <th>Expires</th>
+              <th>Analytics</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td>Launch offer</td><td>snip.ly/launch</td><td>842</td><td><span class="badge text-bg-success">Active</span></td></tr>
-            <tr><td>Newsletter</td><td>snip.ly/jan-news</td><td>392</td><td><span class="badge text-bg-success">Active</span></td></tr>
-            <tr><td>Partner page</td><td>snip.ly/partner</td><td>96</td><td><span class="badge text-bg-secondary">Paused</span></td></tr>
+            @if (loading) {
+              <tr>
+                <td colspan="7" class="text-center py-4 text-secondary">Loading links...</td>
+              </tr>
+            } @else if (links.length === 0) {
+              <tr>
+                <td colspan="7" class="text-center py-4 text-secondary">No links found.</td>
+              </tr>
+            } @else {
+              @for (link of links; track link.id) {
+                <tr>
+                  <td>
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      [checked]="isChecked(link.code)"
+                      (change)="toggleItem(link.code, $any($event.target).checked)"
+                    />
+                  </td>
+                  <td>{{ link.code }}</td>
+                  <td>
+                    <a
+                      [href]="getShortNavigateHref(link.code)"
+                      (click)="openShortLink(link.code, $event)"
+                    >
+                      {{ link.shortUrl }}
+                    </a>
+                  </td>
+                  <td class="text-truncate-cell">
+                    <a [href]="link.longUrl" target="_blank" rel="noopener noreferrer">
+                      {{ link.longUrl }}
+                    </a>
+                  </td>
+                  <td>{{ link.createdAt ? (link.createdAt | date: 'short') : '-' }}</td>
+                  <td>{{ link.expiresAt ? (link.expiresAt | date: 'short') : '-' }}</td>
+                  <td>
+                    <a
+                      class="btn btn-outline-secondary btn-sm"
+                      [routerLink]="['/analytics']"
+                      [queryParams]="{ code: link.code }"
+                      title="View analytics"
+                    >
+                      <i class="bi bi-graph-up"></i>
+                    </a>
+                  </td>
+                </tr>
+              }
+            }
           </tbody>
         </table>
       </div>
+
+      <div class="d-flex justify-content-between align-items-center mt-3">
+        <small class="text-secondary">
+          Showing {{ links.length > 0 ? start + 1 : 0 }} - {{ start + links.length }} of {{ total }}
+        </small>
+        <div class="btn-group btn-group-sm" role="group">
+          <button class="btn btn-outline-secondary" type="button" (click)="previousPage()" [disabled]="!canGoPrevious">
+            Previous
+          </button>
+          <button class="btn btn-outline-secondary" type="button" (click)="nextPage()" [disabled]="!canGoNext">
+            Next
+          </button>
+        </div>
+      </div>
     </div>
   </article>
+
+  <app-popup-confirmation
+    [visible]="showDeleteConfirmation"
+    [loading]="deletingSelected"
+    [title]="'Delete selected links?'"
+    [message]="'This action will permanently delete ' + selectedCount + ' selected link(s).'"
+    [confirmText]="'Delete'"
+    [cancelText]="'Cancel'"
+    (confirmed)="confirmDeleteSelected()"
+    (cancelled)="cancelDeleteSelected()"
+  ></app-popup-confirmation>
 </section>

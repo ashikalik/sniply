@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "build:all": "NX_TUI=false nx run-many --target=build --all",
+    "reset:cache:fix": "sudo chown -R \"$USER\":staff .angular .nx && rm -rf .angular/cache .nx/cache .nx/workspace-data && npx nx reset",
     "s:all": "NX_TUI=false nx run-many --target=serve --projects=sniply-server,sniply-auth,sniply-website,sniply-app --parallel=4",
     "s:ss": "NX_TUI=false nx serve sniply-server",
     "s:ssa": "NX_TUI=false nx serve sniply-auth",

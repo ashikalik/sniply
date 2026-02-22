@@ -14,10 +14,11 @@ export class LinkAnalyticsV1PostgresqlService implements ISniplyLinkV1Analytics 
     private readonly clickRepo: Repository<SniplyLinkClickV1Entity>,
   ) {}
 
-  async getByCode(code: string, from?: Date, to?: Date) {
+  async getByCode(code: string, userId: string, from?: Date, to?: Date) {
     const link = await this.linkRepo.findOne({
       where: {
         code,
+        created_by_user_id: userId,
         deleted_at: IsNull(),
       },
     });

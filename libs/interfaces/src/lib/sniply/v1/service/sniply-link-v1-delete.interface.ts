@@ -1,3 +1,4 @@
 export interface ISniplyLinkV1Delete {
-  softDeleteByCode(code: string): Promise<boolean>;
+  softDeleteByCode(code: string, userId: string): Promise<boolean>;
+  softDeleteByCodes(codes: string[], userId: string): Promise<number>;
 }

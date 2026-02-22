@@ -8,11 +8,18 @@ import {
   provideClientHydration,
   withEventReplay,
 } from '@angular/platform-browser';
+import { provideAuthenticationIntegration } from '@sniply/authentication-angular';
+import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideClientHydration(withEventReplay()),
     provideBrowserGlobalErrorListeners(),
     provideRouter(appRoutes),
+    provideAuthenticationIntegration({
+      authBaseUrl: environment.api.authBaseUrl,
+      apiBaseUrl: environment.api.baseUrl,
+      unauthorizedRedirectUrl: environment.apps.websiteLoginUrl,
+    }),
   ],
 };

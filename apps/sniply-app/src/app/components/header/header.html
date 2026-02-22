@@ -5,19 +5,51 @@
       <span class="fw-semibold text-body">Sniply App</span>
     </a>
 
-    <form class="d-none d-md-flex flex-grow-1 mx-lg-4" role="search">
+    <form class="d-none d-md-flex ms-auto me-2 search-form" role="search">
       <input
-        class="form-control"
+        class="form-control form-control-sm"
         type="search"
         placeholder="Search..."
         aria-label="Search"
       />
     </form>
 
-    <div class="d-flex align-items-center gap-2 ms-auto">
-      <button class="btn btn-primary btn-sm px-3" type="button">Upgrade</button>
-      <button class="btn btn-outline-secondary btn-sm rounded-circle icon-btn" type="button">?</button>
-      <span class="badge rounded-pill text-bg-light border user-chip">AA</span>
+    <div class="d-flex align-items-center gap-2">
+      @if (user$ | async; as user) {
+        <div class="dropdown">
+          <button
+            class="btn p-0 border-0 bg-transparent"
+            type="button"
+            data-bs-toggle="dropdown"
+            data-bs-auto-close="outside"
+            aria-expanded="false"
+            [title]="user.email"
+          >
+            <span class="badge rounded-pill text-bg-light border user-chip">
+              {{ getInitial(user.email) }}
+            </span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+            <li>
+              <div class="dropdown-item-text small text-secondary text-truncate">
+                {{ user.email }}
+              </div>
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <button class="dropdown-item" type="button" (click)="logout()" [disabled]="isLoggingOut">
+                @if (isLoggingOut) {
+                  Logging out...
+                } @else {
+                  Logout
+                }
+              </button>
+            </li>
+          </ul>
+        </div>
+      } @else {
+        <a class="btn btn-outline-primary btn-sm px-3" routerLink="/login">Login</a>
+      }
     </div>
   </div>
 </header>

@@ -4,5 +4,6 @@ export interface ISniplyLinkV1Update {
   updateByCode(
     code: string,
     patch: Partial<ISniplyLinkV1>,
+    userId: string,
   ): Promise<ISniplyLinkV1 | null>;
 }

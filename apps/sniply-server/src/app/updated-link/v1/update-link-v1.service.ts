@@ -1,4 +1,9 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import {
   ISniplyLinkV1,
   ISniplyLinkV1Update,
@@ -14,7 +19,15 @@ export class UpdateLinkV1Service {
     private readonly updater: ISniplyLinkV1Update,
   ) {}
 
-  async update(code: string, request: ISniplyLinkV1UpdateRequest) {
+  async update(
+    code: string,
+    request: ISniplyLinkV1UpdateRequest,
+    userId?: string,
+  ) {
+    if (!userId) {
+      throw new UnauthorizedException('Missing user in access token');
+    }
+
     if (!code?.trim()) {
       throw new BadRequestException('code is required');
     }
@@ -39,7 +52,7 @@ export class UpdateLinkV1Service {
       patch.is_active = request.isActive;
     }
 
-    const updated = await this.updater.updateByCode(code, patch);
+    const updated = await this.updater.updateByCode(code, patch, userId);
     if (!updated) {
       throw new BadRequestException('Link not found');
     }

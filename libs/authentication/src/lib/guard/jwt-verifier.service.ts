@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { verify } from 'jsonwebtoken';
 import { IAuthUser } from './auth-user.interface';
@@ -19,10 +23,14 @@ export class JwtVerifierService {
       this.configService.get<string>('AUTH_JWT_AUDIENCE') ??
       'sniply-services';
 
-    return verify(token, secret, {
-      algorithms: ['HS256'],
-      issuer,
-      audience,
-    }) as IAuthUser;
+    try {
+      return verify(token, secret, {
+        algorithms: ['HS256'],
+        issuer,
+        audience,
+      }) as IAuthUser;
+    } catch {
+      throw new UnauthorizedException('Invalid or expired bearer token');
+    }
   }
 }

@@ -1,4 +1,9 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ISniplyLinkV1Analytics } from '@sniply/interfaces';
 import { SNIPLY_LINK_V1_ANALYTICS } from './link-analytics-v1.tokens';
 
@@ -9,7 +14,16 @@ export class LinkAnalyticsV1Service {
     private readonly analytics: ISniplyLinkV1Analytics,
   ) {}
 
-  async getAnalytics(code: string, from?: string, to?: string) {
+  async getAnalytics(
+    code: string,
+    userId?: string,
+    from?: string,
+    to?: string,
+  ) {
+    if (!userId) {
+      throw new UnauthorizedException('Missing user in access token');
+    }
+
     if (!code?.trim()) {
       throw new BadRequestException('code is required');
     }
@@ -27,6 +41,6 @@ export class LinkAnalyticsV1Service {
       throw new BadRequestException('from must be <= to');
     }
 
-    return this.analytics.getByCode(code, fromDate, toDate);
+    return this.analytics.getByCode(code, userId, fromDate, toDate);
   }
 }

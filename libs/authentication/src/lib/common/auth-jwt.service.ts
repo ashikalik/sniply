@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { sign, verify } from 'jsonwebtoken';
 
@@ -50,11 +54,15 @@ export class AuthJwtService {
     const issuer = this.getIssuer();
     const audience = this.getAudience();
 
-    return verify(token, secret, {
-      algorithms: ['HS256'],
-      issuer,
-      audience,
-    }) as IAuthAccessTokenPayload;
+    try {
+      return verify(token, secret, {
+        algorithms: ['HS256'],
+        issuer,
+        audience,
+      }) as IAuthAccessTokenPayload;
+    } catch {
+      throw new UnauthorizedException('Invalid or expired bearer token');
+    }
   }
 
   private getSecret() {

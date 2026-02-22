@@ -5,7 +5,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthStateService } from '@sniply/authentication-angular';
+import { AuthStateService, IAuthUserModel } from '@sniply/authentication-angular';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-home-page',
@@ -69,6 +70,27 @@ export class HomePage {
     }
 
     const encodedUrl = btoa(url);
-    window.location.assign(`http://localhost:4201/${route}?target=${encodedUrl}`);
+    const encodedAccessToken = this.toBase64(this.authState.accessToken ?? '');
+    const encodedRefreshToken = this.toBase64(this.authState.refreshToken ?? '');
+    const encodedUser = this.toBase64(
+      JSON.stringify(this.authState.user as IAuthUserModel),
+    );
+
+    const targetPath = route === 'link-form'
+      ? environment.endpoints.sniplyAppLinkForm
+      : environment.endpoints.sniplyAppQrForm;
+    const redirectUrl = new URL(
+      `${environment.apps.sniplyAppBaseUrl}${targetPath}`,
+    );
+    redirectUrl.searchParams.set('target', encodedUrl);
+    redirectUrl.searchParams.set('at', encodedAccessToken);
+    redirectUrl.searchParams.set('rt', encodedRefreshToken);
+    redirectUrl.searchParams.set('u', encodedUser);
+
+    window.location.assign(redirectUrl.toString());
+  }
+
+  private toBase64(input: string): string {
+    return btoa(input);
   }
 }

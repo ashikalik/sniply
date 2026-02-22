@@ -9,6 +9,7 @@ import {
   withEventReplay,
 } from '@angular/platform-browser';
 import { provideAuthenticationIntegration } from '@sniply/authentication-angular';
+import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,8 +17,8 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(appRoutes),
     provideAuthenticationIntegration({
-      authBaseUrl: 'http://localhost:3000',
-      apiBaseUrl: 'http://localhost:3001',
+      authBaseUrl: environment.api.authBaseUrl,
+      apiBaseUrl: environment.api.sniplyServerBaseUrl,
       unauthorizedRedirectUrl: '/login',
     }),
   ],
