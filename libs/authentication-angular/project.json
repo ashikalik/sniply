@@ -1,0 +1,28 @@
+{
+  "name": "authentication-angular",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/authentication-angular/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/authentication-angular",
+        "main": "libs/authentication-angular/src/index.ts",
+        "tsConfig": "libs/authentication-angular/tsconfig.lib.json",
+        "assets": ["libs/authentication-angular/README.md"]
+      },
+      "configurations": {
+        "production": {}
+      }
+    },
+    "build:prod": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nx run authentication-angular:build:production"
+      }
+    }
+  }
+}

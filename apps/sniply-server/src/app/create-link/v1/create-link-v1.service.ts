@@ -15,7 +15,7 @@ export class CreateLinkV1Service {
     private readonly creator: ISniplyLinkV1Create,
   ) {}
 
-  async create(request: ISniplyLinkV1CreateRequest) {
+  async create(request: ISniplyLinkV1CreateRequest, userId?: string) {
     if (!request.longUrl?.trim()) {
       throw new BadRequestException('longUrl is required');
     }
@@ -36,6 +36,7 @@ export class CreateLinkV1Service {
       is_active: true,
       click_count: 0,
       password_hash: request.password ?? null,
+      created_by_user_id: userId ?? null,
       created_at: now,
       updated_at: now,
     };

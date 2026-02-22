@@ -1,0 +1,35 @@
+<form class="row g-3" [formGroup]="form" (ngSubmit)="submit()">
+  <div class="col-12">
+    <label class="form-label" for="home-qr-destination">Destination URL</label>
+    <input
+      id="home-qr-destination"
+      class="form-control"
+      type="url"
+      placeholder="https://example.com"
+      formControlName="destinationUrl"
+    />
+    @if (form.controls.destinationUrl.touched && form.controls.destinationUrl.invalid) {
+      <small class="text-danger">Destination URL is required.</small>
+    }
+  </div>
+
+  <div class="col-12 col-md-6">
+    <label class="form-label" for="home-qr-label">Label</label>
+    <input
+      id="home-qr-label"
+      class="form-control"
+      type="text"
+      placeholder="Product packaging"
+      formControlName="label"
+    />
+  </div>
+
+  <div class="col-12 col-md-6">
+    <label class="form-label" for="home-qr-color">Foreground Color</label>
+    <input id="home-qr-color" class="form-control" type="text" formControlName="color" />
+  </div>
+
+  <div class="col-12">
+    <button class="btn btn-primary" type="submit">Generate QR code</button>
+  </div>
+</form>

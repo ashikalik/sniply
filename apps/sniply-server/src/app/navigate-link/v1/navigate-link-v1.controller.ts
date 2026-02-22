@@ -1,11 +1,13 @@
 import { Controller, Get, Param, Query, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { NavigateLinkV1Service } from './navigate-link-v1.service';
+import { Public } from '@sniply/authentication';
 
 @Controller('r')
 export class NavigateLinkV1Controller {
   constructor(private readonly service: NavigateLinkV1Service) {}
 
+  @Public()
   @Get(':code')
   async navigate(
     @Param('code') code: string,

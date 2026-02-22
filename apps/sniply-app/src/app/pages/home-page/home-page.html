@@ -1,37 +1,79 @@
-<section class="page-wrap">
-  <header class="page-title-wrap">
-    <h1>Your Connections Platform</h1>
-    <p>Manage links, QR codes, pages, and campaigns from one clean workspace.</p>
+<section class="d-grid gap-3">
+  <header>
+    <h1 class="h2 mb-1">Your Connections Platform</h1>
+    <p class="text-secondary mb-0">
+      Manage links, QR codes, pages, and campaigns from one clean workspace.
+    </p>
   </header>
 
-  <div class="home-grid">
-    <article class="panel-card">
-      <h2>Quick create</h2>
-      <p class="subtle">Create short links or QR code destinations instantly.</p>
-      <label class="form-label" for="destination">Enter your destination URL</label>
-      <div class="form-row">
-        <input id="destination" type="url" placeholder="https://example.com/your-link" />
-        <button type="button">Create link</button>
-      </div>
-      <label class="option">
-        <input type="checkbox" /> Also generate a QR Code for this link
-      </label>
-    </article>
+  <div class="row g-3">
+    <div class="col-12 col-xl-8">
+      <article class="card border-0 shadow-sm h-100">
+        <div class="card-body">
+          <h2 class="h4">Quick create</h2>
+          <p class="text-secondary mb-3">Create short links or QR code destinations instantly.</p>
+          <ul class="nav nav-tabs mb-0" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link"
+                [class.active]="activeTab === 'links'"
+                type="button"
+                role="tab"
+                [attr.aria-selected]="activeTab === 'links'"
+                (click)="activeTab = 'links'"
+              >
+                Links
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link"
+                [class.active]="activeTab === 'qr'"
+                type="button"
+                role="tab"
+                [attr.aria-selected]="activeTab === 'qr'"
+                (click)="activeTab = 'qr'"
+              >
+                QR Code
+              </button>
+            </li>
+          </ul>
 
-    <article class="panel-card promo-card">
-      <h3>Pages that inspire action</h3>
-      <p>Customize pages and improve conversions with stronger calls to action.</p>
-      <button type="button">Get started</button>
-    </article>
+          <div class="border border-top-0 rounded-bottom p-3">
+            @if (activeTab === 'links') {
+              <app-link-form></app-link-form>
+            } @else {
+              <app-qr-form></app-qr-form>
+            }
+          </div>
+        </div>
+      </article>
+    </div>
 
-    <article class="panel-card wide-card">
-      <h3>Getting started checklist</h3>
-      <ul>
-        <li>Create your first short link</li>
-        <li>Create a QR code</li>
-        <li>Connect a custom domain</li>
-        <li>Review analytics dashboard</li>
-      </ul>
-    </article>
+    <div class="col-12 col-xl-4">
+      <article class="card border-0 shadow-sm h-100 bg-light-subtle">
+        <div class="card-body d-flex flex-column">
+          <h3 class="h4">Pages that inspire action</h3>
+          <p class="text-secondary flex-grow-1 mb-4">
+            Customize pages and improve conversions with stronger calls to action.
+          </p>
+          <button class="btn btn-outline-primary align-self-start" type="button">Get started</button>
+        </div>
+      </article>
+    </div>
+
+    <div class="col-12">
+      <article class="card border-0 shadow-sm">
+        <div class="card-body">
+          <h3 class="h4 mb-3">Getting started checklist</h3>
+          <ul class="mb-0">
+            <li>Create your first short link</li>
+            <li>Create a QR code</li>
+            <li>Connect a custom domain</li>
+            <li>Review analytics dashboard</li>
+          </ul>
+        </div>
+      </article>
+    </div>
   </div>
 </section>

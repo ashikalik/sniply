@@ -1,9 +1,24 @@
-<section class="form-page">
-  <h1>Custom Domains</h1>
-  <article class="form-card">
-    <label>Domain <input type="text" placeholder="go.yourbrand.com" /></label>
-    <label>Default Redirect <input type="url" placeholder="https://yourbrand.com" /></label>
-    <label>SSL Status <input type="text" value="Active" /></label>
-    <button type="button">Add domain</button>
+<section class="d-grid gap-3">
+  <h1 class="h3 mb-0">Custom Domains</h1>
+  <article class="card border-0 shadow-sm">
+    <div class="card-body">
+      <form class="row g-3">
+        <div class="col-12 col-md-6">
+          <label class="form-label" for="domain">Domain</label>
+          <input id="domain" class="form-control" type="text" placeholder="go.yourbrand.com" />
+        </div>
+        <div class="col-12 col-md-6">
+          <label class="form-label" for="redirect">Default Redirect</label>
+          <input id="redirect" class="form-control" type="url" placeholder="https://yourbrand.com" />
+        </div>
+        <div class="col-12 col-md-6">
+          <label class="form-label" for="ssl">SSL Status</label>
+          <input id="ssl" class="form-control" type="text" value="Active" />
+        </div>
+        <div class="col-12">
+          <button class="btn btn-primary" type="button">Add domain</button>
+        </div>
+      </form>
+    </div>
   </article>
 </section>

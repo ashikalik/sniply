@@ -23,3 +23,33 @@
   background: var(--sniply-accent);
   box-shadow: 0 0 0 4px rgba(255, 106, 61, 0.15);
 }
+
+.user-pill {
+  padding: 0.35rem 0.65rem;
+  border: 1px solid var(--sniply-border);
+  border-radius: 999px;
+  background: #fff;
+}
+
+.profile-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #0b57d0;
+  background: #eaf1ff;
+  border: 1px solid #d8e5ff;
+}
+
+.user-email {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.9rem;
+  color: #495057;
+}

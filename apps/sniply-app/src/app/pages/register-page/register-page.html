@@ -59,8 +59,15 @@
           <div class="form-check">
             <input class="form-check-input" type="checkbox" id="agree" />
             <label class="form-check-label" for="agree">
-              I agree to the <a href="#" class="text-decoration-none">Terms</a> and
-              <a href="#" class="text-decoration-none">Privacy Policy</a>.
+              I agree to the
+              <a href="/terms" routerLink="/terms" class="text-decoration-none">Terms</a>
+              and
+              <a
+                href="/privacy-policy"
+                routerLink="/privacy-policy"
+                class="text-decoration-none"
+                >Privacy Policy</a
+              >.
             </label>
           </div>
           <button class="btn sniply-btn-primary btn-lg" type="button">Create account</button>
@@ -76,7 +83,8 @@
         </div>
 
         <p class="text-muted mt-4 mb-0">
-          Already have an account? <a routerLink="/login" class="text-decoration-none">Sign in</a>
+          Already have an account?
+          <a href="/login" routerLink="/login" class="text-decoration-none">Sign in</a>
         </p>
       </div>
     </div>

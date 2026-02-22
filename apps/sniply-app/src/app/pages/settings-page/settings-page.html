@@ -1,9 +1,24 @@
-<section class="form-page">
-  <h1>Settings</h1>
-  <article class="form-card">
-    <label>Workspace Name <input type="text" value="Sniply Team" /></label>
-    <label>Timezone <input type="text" value="UTC-05:00" /></label>
-    <label>Notification Email <input type="email" placeholder="team@sniply.app" /></label>
-    <button type="button">Save settings</button>
+<section class="d-grid gap-3">
+  <h1 class="h3 mb-0">Settings</h1>
+  <article class="card border-0 shadow-sm">
+    <div class="card-body">
+      <form class="row g-3">
+        <div class="col-12 col-md-6">
+          <label class="form-label" for="workspace">Workspace Name</label>
+          <input id="workspace" class="form-control" type="text" value="Sniply Team" />
+        </div>
+        <div class="col-12 col-md-6">
+          <label class="form-label" for="timezone">Timezone</label>
+          <input id="timezone" class="form-control" type="text" value="UTC-05:00" />
+        </div>
+        <div class="col-12">
+          <label class="form-label" for="email">Notification Email</label>
+          <input id="email" class="form-control" type="email" placeholder="team@sniply.app" />
+        </div>
+        <div class="col-12">
+          <button class="btn btn-primary" type="button">Save settings</button>
+        </div>
+      </form>
+    </div>
   </article>
 </section>

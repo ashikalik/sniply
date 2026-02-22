@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -11,6 +12,8 @@ import { DeleteLinkModule } from './delete-link/delete-link.module';
 import { LinkAnalyticsModule } from './link-analytics/link-analytics.module';
 import { CreateSniplyLinks20260207122907 } from '../migrations/20260207122907-create-sniply-links';
 import { CreateLinkClicks20260207140959 } from '../migrations/20260207140959-create-link-clicks';
+import { JwtAuthGuard } from '@sniply/authentication';
+import { JwtVerifierService } from '@sniply/authentication';
 
 @Module({
   imports: [
@@ -40,6 +43,13 @@ import { CreateLinkClicks20260207140959 } from '../migrations/20260207140959-cre
     LinkAnalyticsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    JwtVerifierService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule {}

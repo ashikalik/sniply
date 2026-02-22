@@ -54,6 +54,9 @@
     "serve": {
       "continuous": true,
       "executor": "@angular/build:dev-server",
+      "options": {
+        "port": 4200
+      },
       "configurations": {
         "production": {
           "buildTarget": "sniply-website:build:production"

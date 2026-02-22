@@ -1,16 +1,23 @@
-<header class="app-header">
-  <div class="brand-wrap">
-    <span class="brand-mark">S</span>
-    <strong>Sniply App</strong>
-  </div>
+<header class="navbar navbar-expand-lg bg-white border-bottom px-3 px-lg-4 py-2">
+  <div class="container-fluid p-0 gap-2">
+    <a class="navbar-brand d-flex align-items-center gap-2 mb-0" href="#">
+      <span class="brand-mark fw-bold">S</span>
+      <span class="fw-semibold text-body">Sniply App</span>
+    </a>
 
-  <label class="search-wrap" for="dashboard-search">
-    <input id="dashboard-search" type="search" placeholder="Search..." />
-  </label>
+    <form class="d-none d-md-flex flex-grow-1 mx-lg-4" role="search">
+      <input
+        class="form-control"
+        type="search"
+        placeholder="Search..."
+        aria-label="Search"
+      />
+    </form>
 
-  <div class="header-actions">
-    <button class="btn-upgrade" type="button">Upgrade</button>
-    <button class="icon-btn" type="button" aria-label="Help">?</button>
-    <span class="user-chip">AA</span>
+    <div class="d-flex align-items-center gap-2 ms-auto">
+      <button class="btn btn-primary btn-sm px-3" type="button">Upgrade</button>
+      <button class="btn btn-outline-secondary btn-sm rounded-circle icon-btn" type="button">?</button>
+      <span class="badge rounded-pill text-bg-light border user-chip">AA</span>
+    </div>
   </div>
 </header>

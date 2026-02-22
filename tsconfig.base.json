@@ -15,7 +15,11 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@sniply/interfaces": ["libs/interfaces/src/index.ts"]
+      "@sniply/interfaces": ["libs/interfaces/src/index.ts"],
+      "@sniply/authentication": ["libs/authentication/src/index.ts"],
+      "@sniply/authentication-angular": [
+        "libs/authentication-angular/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]

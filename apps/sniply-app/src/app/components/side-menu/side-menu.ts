@@ -9,15 +9,13 @@ import { RouterModule } from '@angular/router';
 })
 export class SideMenuComponent {
   readonly links = [
-    { path: '/', label: 'Home' },
-    { path: '/links', label: 'Link List' },
-    { path: '/link-form', label: 'Link Form' },
-    { path: '/qr-codes', label: 'QR List' },
-    { path: '/qr-form', label: 'QR Form' },
-    { path: '/pages', label: 'Pages List' },
-    { path: '/analytics', label: 'Analytics' },
-    { path: '/campaigns', label: 'Campaigns' },
-    { path: '/custom-domains', label: 'Custom Domains' },
-    { path: '/settings', label: 'Settings' },
+    { path: '/home', label: 'Home', icon: 'bi-house-door' },
+    { path: '/links', label: 'Links', icon: 'bi-link-45deg' },
+    { path: '/qr-codes', label: 'QR Codes', icon: 'bi-qr-code-scan' },
+    { path: '/pages', label: 'Pages', icon: 'bi-file-earmark-text' },
+    { path: '/analytics', label: 'Analytics', icon: 'bi-bar-chart' },
+    { path: '/campaigns', label: 'Campaigns', icon: 'bi-megaphone' },
+    { path: '/custom-domains', label: 'Custom Domains', icon: 'bi-globe2' },
+    { path: '/settings', label: 'Settings', icon: 'bi-gear' },
   ];
 }

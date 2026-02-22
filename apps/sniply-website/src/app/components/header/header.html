@@ -32,11 +32,18 @@
         </li>
       </ul>
 
-      <div class="d-flex gap-2 align-items-center">
-        <a class="btn btn-link text-decoration-none text-body" routerLink="/login">Sign in</a>
-        <button class="btn sniply-btn-secondary" type="button">Talk to sales</button>
-        <a class="btn sniply-btn-primary" routerLink="/register">Get started</a>
-      </div>
+      @if (user$ | async; as user) {
+        <div class="d-flex align-items-center gap-2 user-pill" title="Logged in user">
+          <span class="profile-icon">{{ getInitial(user.email) }}</span>
+          <span class="user-email d-none d-md-inline">{{ user.email }}</span>
+        </div>
+      } @else {
+        <div class="d-flex gap-2 align-items-center">
+          <a class="btn btn-link text-decoration-none text-body" routerLink="/login">Sign in</a>
+          <button class="btn sniply-btn-secondary" type="button">Talk to sales</button>
+          <a class="btn sniply-btn-primary" routerLink="/register">Get started</a>
+        </div>
+      }
     </div>
   </div>
 </nav>

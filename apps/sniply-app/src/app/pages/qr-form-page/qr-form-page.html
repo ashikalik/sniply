@@ -1,9 +1,8 @@
-<section class="form-page">
-  <h1>Create QR Code</h1>
-  <article class="form-card">
-    <label>Destination URL <input type="url" placeholder="https://example.com" /></label>
-    <label>Label <input type="text" placeholder="Product packaging" /></label>
-    <label>Foreground Color <input type="text" value="#0f172a" /></label>
-    <button type="button">Generate QR code</button>
+<section class="d-grid gap-3">
+  <h1 class="h3 mb-0">Create QR Code</h1>
+  <article class="card border-0 shadow-sm">
+    <div class="card-body">
+      <app-qr-form [prefillTargetUrl]="(prefillTargetUrl$ | async) ?? ''"></app-qr-form>
+    </div>
   </article>
 </section>

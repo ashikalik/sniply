@@ -1,37 +1,10 @@
-.side-menu {
-  padding: 1rem 0.75rem;
+:host {
+  display: block;
+  height: 100%;
 }
 
-.create-btn {
-  width: 100%;
-  border: 0;
-  border-radius: 10px;
-  padding: 0.7rem 0.9rem;
-  background: #0a3fa8;
-  color: #fff;
-  font-weight: 700;
-  margin-bottom: 1rem;
-}
-
-.menu-links {
-  display: grid;
-  gap: 0.25rem;
-}
-
-.menu-link {
-  color: var(--app-ink);
-  text-decoration: none;
-  border-radius: 8px;
-  padding: 0.6rem 0.7rem;
+.list-group-item.active {
+  background-color: #e9f1ff;
+  color: #0d47a1;
   font-weight: 600;
-  font-size: 0.93rem;
-}
-
-.menu-link:hover {
-  background: #f1f5ff;
-}
-
-.menu-link.is-active {
-  background: #e8efff;
-  color: #12306b;
 }

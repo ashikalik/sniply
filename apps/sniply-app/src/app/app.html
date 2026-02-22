@@ -1,14 +1,19 @@
-<div class="dashboard-shell">
-  <app-header></app-header>
+<div class="dashboard-shell min-vh-100">
+  <app-header class="sticky-top"></app-header>
 
-  <div class="dashboard-body">
-    <aside class="dashboard-sidebar">
-      <app-side-menu></app-side-menu>
-    </aside>
+  <div class="container-fluid dashboard-main flex-grow-1 p-0">
+    <div class="row g-0 h-100 w-100">
+      <aside class="col-12 col-lg-3 col-xl-2 border-end bg-white dashboard-sidebar">
+        <app-side-menu></app-side-menu>
+      </aside>
 
-    <main class="dashboard-content">
-      <router-outlet></router-outlet>
-      <app-footer></app-footer>
-    </main>
+      <main class="col p-3 p-lg-4">
+        <div class="content-wrap container w-100 d-grid gap-3 px-0">
+          <router-outlet></router-outlet>
+        </div>
+      </main>
+    </div>
   </div>
+
+  <app-footer class="container-fluid px-3 px-lg-4 py-2 bg-white border-top sticky-bottom"></app-footer>
 </div>

@@ -37,11 +37,11 @@ export class LinkAnalyticsV1PostgresqlService implements ISniplyLinkV1Analytics 
     };
 
     if (from && to) {
-      where.clicked_at = Between(from, to);
+      where['clicked_at'] = Between(from, to);
     } else if (from) {
-      where.clicked_at = Between(from, new Date(8640000000000000));
+      where['clicked_at'] = Between(from, new Date(8640000000000000));
     } else if (to) {
-      where.clicked_at = Between(new Date(0), to);
+      where['clicked_at'] = Between(new Date(0), to);
     }
 
     const [clicks, total] = await this.clickRepo.findAndCount({

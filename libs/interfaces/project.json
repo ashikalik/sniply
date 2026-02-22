@@ -4,6 +4,25 @@
   "sourceRoot": "libs/interfaces/src",
   "projectType": "library",
   "tags": [],
-  "// targets": "to see all targets run: nx show project interfaces --web",
-  "targets": {}
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/interfaces",
+        "main": "libs/interfaces/src/index.ts",
+        "tsConfig": "libs/interfaces/tsconfig.lib.json",
+        "assets": ["libs/interfaces/README.md"]
+      },
+      "configurations": {
+        "production": {}
+      }
+    },
+    "build:prod": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nx run interfaces:build:production"
+      }
+    }
+  }
 }

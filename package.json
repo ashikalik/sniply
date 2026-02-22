@@ -4,7 +4,10 @@
   "license": "MIT",
   "private": true,
   "scripts": {
+    "build:all": "NX_TUI=false nx run-many --target=build --all",
+    "s:all": "NX_TUI=false nx run-many --target=serve --projects=sniply-server,sniply-auth,sniply-website,sniply-app --parallel=4",
     "s:ss": "NX_TUI=false nx serve sniply-server",
+    "s:ssa": "NX_TUI=false nx serve sniply-auth",
     "s:sw": "NX_TUI=false nx serve sniply-website",
     "s:sa": "NX_TUI=false nx serve sniply-app"
   },
@@ -37,6 +40,7 @@
     "@swc/helpers": "~0.5.11",
     "@types/express": "^4.17.21",
     "@types/jest": "^30.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "20.19.9",
     "@typescript-eslint/parser": "^8.54.0",
     "@typescript-eslint/utils": "^8.40.0",
@@ -80,6 +84,8 @@
     "@popperjs/core": "^2.11.8",
     "bootstrap": "5.3.8",
     "express": "^4.21.2",
+    "google-auth-library": "^10.5.0",
+    "jsonwebtoken": "^9.0.3",
     "pg": "^8.18.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.0",

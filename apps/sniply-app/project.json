@@ -54,6 +54,9 @@
     "serve": {
       "continuous": true,
       "executor": "@angular/build:dev-server",
+      "options": {
+        "port": 4201
+      },
       "configurations": {
         "production": {
           "buildTarget": "sniply-app:build:production"
@@ -80,7 +83,7 @@
       "executor": "@nx/web:file-server",
       "options": {
         "buildTarget": "sniply-app:build",
-        "port": 4200,
+        "port": 4201,
         "staticFilePath": "dist/apps/sniply-app/browser",
         "spa": true
       }
