@@ -1,0 +1,68 @@
+.resources-page {
+  padding: 3rem 0 5rem;
+}
+
+.resources-hero {
+  padding: 2rem 0 3rem;
+}
+
+.resources-section {
+  padding: 2.5rem 0;
+}
+
+.resources-section.alt {
+  background: #ffffff;
+}
+
+.resource-card {
+  background: var(--sniply-surface);
+  border: 1px solid var(--sniply-border);
+  border-radius: 20px;
+  padding: 1.5rem;
+  height: 100%;
+}
+
+.resource-thumb {
+  height: 140px;
+  border-radius: 16px;
+  margin-bottom: 1rem;
+  background: #f5f2ee;
+  border: 1px solid var(--sniply-border);
+}
+
+.thumb-blog {
+  background: linear-gradient(135deg, #ffe1d6, #fff7f0);
+}
+
+.thumb-guides {
+  background: linear-gradient(135deg, #e6f1ff, #f4f8ff);
+}
+
+.thumb-videos {
+  background: linear-gradient(135deg, #e6f6f3, #f1fbf8);
+}
+
+.thumb-stories {
+  background: linear-gradient(135deg, #f9e6ff, #fdf2ff);
+}
+
+.thumb-qr {
+  background: linear-gradient(135deg, #f0f0f0, #ffffff);
+}
+
+.resource-card.compact {
+  padding: 1.25rem;
+}
+
+.resource-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--sniply-accent-2);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.resource-link:hover {
+  color: var(--sniply-accent);
+}

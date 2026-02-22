@@ -1,0 +1,58 @@
+.pricing-page {
+  padding: 3rem 0 5rem;
+}
+
+.pricing-hero {
+  padding: 2rem 0 3rem;
+}
+
+.pricing-grid {
+  padding: 2rem 0 4rem;
+}
+
+.price-card {
+  background: var(--sniply-surface);
+  border: 1px solid var(--sniply-border);
+  border-radius: 20px;
+  padding: 2rem;
+  height: 100%;
+  position: relative;
+}
+
+.price-card .price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.price-card ul li {
+  margin-bottom: 0.6rem;
+  color: var(--sniply-ink-muted);
+}
+
+.price-card.featured {
+  border: 2px solid var(--sniply-accent);
+  box-shadow: 0 20px 60px rgba(255, 106, 61, 0.15);
+}
+
+.price-card.featured .badge {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: var(--sniply-accent);
+  color: #1a1a1a;
+  font-weight: 600;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+}
+
+.pricing-faq {
+  padding: 2rem 0 4rem;
+}
+
+.faq-item {
+  background: #fff;
+  border: 1px solid var(--sniply-border);
+  border-radius: 16px;
+  padding: 1.5rem;
+}

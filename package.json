@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "s:ss": "NX_TUI=false nx serve sniply-server",
-    "s:sc": "NX_TUI=false nx serve sniply-client"
+    "s:sw": "NX_TUI=false nx serve sniply-website",
+    "s:sa": "NX_TUI=false nx serve sniply-app"
   },
   "devDependencies": {
     "@angular-devkit/core": "~21.1.0",

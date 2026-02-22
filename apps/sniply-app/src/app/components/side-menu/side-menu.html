@@ -1,0 +1,16 @@
+<div class="side-menu">
+  <button class="create-btn" type="button">Create new</button>
+
+  <nav class="menu-links" aria-label="Dashboard navigation">
+    @for (item of links; track item.path) {
+      <a
+        [routerLink]="item.path"
+        class="menu-link"
+        routerLinkActive="is-active"
+        [routerLinkActiveOptions]="{ exact: item.path === '/' }"
+      >
+        {{ item.label }}
+      </a>
+    }
+  </nav>
+</div>

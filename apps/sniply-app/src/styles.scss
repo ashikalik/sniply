@@ -1,0 +1,37 @@
+@use "bootstrap/scss/bootstrap";
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@500;600;700&display=swap');
+
+:root {
+  --app-bg: #f2f4f8;
+  --app-ink: #1f2a3d;
+  --app-ink-muted: #5f6b7b;
+  --app-border: #dbe3ee;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+  background: radial-gradient(circle at 0% 0%, #f7f9ff 0%, transparent 26%),
+    radial-gradient(circle at 100% 0%, #f8fbff 0%, transparent 30%),
+    var(--app-bg);
+  color: var(--app-ink);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+  letter-spacing: -0.02em;
+}

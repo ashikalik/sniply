@@ -1,0 +1,84 @@
+<main class="register-page">
+  <div class="container">
+    <div class="register-shell">
+      <div class="register-left">
+        <span class="sniply-pill">Start free</span>
+        <h1>Create your Sniply account</h1>
+        <p class="text-muted">
+          Build branded links, collaborate with your team, and track campaign
+          performance from day one.
+        </p>
+        <div class="register-steps">
+          <div>
+            <span>1</span>
+            <p>Set up your workspace in minutes.</p>
+          </div>
+          <div>
+            <span>2</span>
+            <p>Connect a custom domain and start sharing.</p>
+          </div>
+          <div>
+            <span>3</span>
+            <p>Measure engagement with rich analytics.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="register-card">
+        <h2 class="h4">Get started</h2>
+        <p class="text-muted mb-4">No credit card required.</p>
+
+        <form class="d-grid gap-3">
+          <div>
+            <label class="form-label" for="fullName">Full name</label>
+            <input
+              id="fullName"
+              class="form-control"
+              type="text"
+              placeholder="Jane Doe"
+            />
+          </div>
+          <div>
+            <label class="form-label" for="workEmail">Work email</label>
+            <input
+              id="workEmail"
+              class="form-control"
+              type="email"
+              placeholder="you@company.com"
+            />
+          </div>
+          <div>
+            <label class="form-label" for="password">Password</label>
+            <input
+              id="password"
+              class="form-control"
+              type="password"
+              placeholder="Create a password"
+            />
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="agree" />
+            <label class="form-check-label" for="agree">
+              I agree to the <a href="#" class="text-decoration-none">Terms</a> and
+              <a href="#" class="text-decoration-none">Privacy Policy</a>.
+            </label>
+          </div>
+          <button class="btn sniply-btn-primary btn-lg" type="button">Create account</button>
+        </form>
+
+        <div class="divider">
+          <span>or</span>
+        </div>
+
+        <div class="d-grid gap-2">
+          <button class="btn btn-outline-dark" type="button">Sign up with Google</button>
+          <button class="btn btn-outline-dark" type="button">Sign up with Microsoft</button>
+        </div>
+
+        <p class="text-muted mt-4 mb-0">
+          Already have an account? <a routerLink="/login" class="text-decoration-none">Sign in</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</main>
