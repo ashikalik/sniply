@@ -11,18 +11,30 @@ export class AuthBootstrapService {
   ) {}
 
   initialize(): Observable<boolean> {
+    this.authState.restoreFromStorage();
+
     return this.authApi.me().pipe(
       map(() => true),
-      catchError(() =>
-        this.authApi.refresh().pipe(
+      catchError((error: { status?: number }) => {
+        if (!this.isUnauthorized(error)) {
+          return of(this.authState.isAuthenticated);
+        }
+
+        return this.authApi.refresh().pipe(
           switchMap(() => this.authApi.me()),
           map(() => true),
-          catchError(() => {
-            this.authState.clearSession();
-            return of(false);
+          catchError((refreshError: { status?: number }) => {
+            if (this.isUnauthorized(refreshError)) {
+              this.authState.clearSession();
+            }
+            return of(this.authState.isAuthenticated);
           }),
-        ),
-      ),
+        );
+      }),
     );
+  }
+
+  private isUnauthorized(error: { status?: number } | null | undefined): boolean {
+    return error?.status === 401 || error?.status === 403;
   }
 }

@@ -74,6 +74,10 @@ export class AuthStateService {
     this.initializedSubject.next(true);
   }
 
+  restoreFromStorage() {
+    this.hydrateFromStorage();
+  }
+
   private hydrateFromStorage() {
     const storage = this.getStorage();
     if (!storage) {
@@ -86,8 +90,11 @@ export class AuthStateService {
       const userRaw = storage.getItem(AuthStateService.USER_KEY);
       const user = userRaw ? (JSON.parse(userRaw) as IAuthUserModel) : null;
 
-      if (accessToken && user) {
+      if (accessToken) {
         this.accessTokenSubject.next(accessToken);
+      }
+
+      if (user) {
         this.userSubject.next(user);
       }
 
@@ -109,11 +116,15 @@ export class AuthStateService {
       return;
     }
 
-    if (accessToken && user) {
+    if (accessToken) {
       storage.setItem(AuthStateService.ACCESS_TOKEN_KEY, accessToken);
-      storage.setItem(AuthStateService.USER_KEY, JSON.stringify(user));
     } else {
       storage.removeItem(AuthStateService.ACCESS_TOKEN_KEY);
+    }
+
+    if (user) {
+      storage.setItem(AuthStateService.USER_KEY, JSON.stringify(user));
+    } else {
       storage.removeItem(AuthStateService.USER_KEY);
     }
 

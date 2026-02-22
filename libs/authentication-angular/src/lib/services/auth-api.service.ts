@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { map, Observable, of, switchMap, tap } from 'rxjs';
 import { AUTH_CLIENT_CONFIG, IAuthClientConfig } from '../config/auth-client.config';
 import { IAuthSessionModel } from '../models/auth-session.model';
 import { IAuthUserModel } from '../models/auth-user.model';
@@ -34,6 +34,7 @@ export class AuthApiService {
         { withCredentials: true },
       )
       .pipe(
+        switchMap((session) => this.withResolvedUser(session)),
         tap((session) =>
           this.authState.setSession(
             session.accessToken,
@@ -52,6 +53,7 @@ export class AuthApiService {
         { withCredentials: true },
       )
       .pipe(
+        switchMap((session) => this.withResolvedUser(session)),
         tap((session) =>
           this.authState.setSession(
             session.accessToken,
@@ -70,6 +72,7 @@ export class AuthApiService {
         { withCredentials: true },
       )
       .pipe(
+        switchMap((session) => this.withResolvedUser(session)),
         tap((session) =>
           this.authState.setSession(
             session.accessToken,
@@ -81,9 +84,15 @@ export class AuthApiService {
   }
 
   me(): Observable<IAuthUserModel> {
+    const accessToken = this.authState.accessToken;
     return this.http
       .get<IAuthUserModel>(`${this.config.authBaseUrl}/auth/v1/me`, {
         withCredentials: true,
+        headers: accessToken
+          ? {
+              Authorization: `Bearer ${accessToken}`,
+            }
+          : undefined,
       })
       .pipe(tap((user) => this.authState.setUser(user)));
   }
@@ -97,6 +106,7 @@ export class AuthApiService {
         { withCredentials: true },
       )
       .pipe(
+        switchMap((session) => this.withResolvedUser(session)),
         tap((session) =>
           this.authState.setSession(
             session.accessToken,
@@ -158,5 +168,26 @@ export class AuthApiService {
         { withCredentials: true },
       )
       .pipe(tap(() => this.authState.clearSession()));
+  }
+
+  private withResolvedUser<T extends IAuthSessionModel>(
+    session: T,
+  ): Observable<T> {
+    if (session.user?.id && session.user?.email) {
+      return of(session);
+    }
+
+    if (!session.accessToken) {
+      return of(session);
+    }
+
+    return this.http
+      .get<IAuthUserModel>(`${this.config.authBaseUrl}/auth/v1/me`, {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${session.accessToken}`,
+        },
+      })
+      .pipe(map((user) => ({ ...session, user })));
   }
 }

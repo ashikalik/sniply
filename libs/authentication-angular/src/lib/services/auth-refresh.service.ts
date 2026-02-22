@@ -16,8 +16,10 @@ export class AuthRefreshService {
     if (!this.refreshInFlight$) {
       this.refreshInFlight$ = this.authApi.refresh().pipe(
         map(() => true),
-        catchError(() => {
-          this.authState.clearSession();
+        catchError((error: { status?: number }) => {
+          if (this.isUnauthorized(error)) {
+            this.authState.clearSession();
+          }
           return of(false);
         }),
         tap(() => {
@@ -28,5 +30,9 @@ export class AuthRefreshService {
     }
 
     return this.refreshInFlight$;
+  }
+
+  private isUnauthorized(error: { status?: number } | null | undefined): boolean {
+    return error?.status === 401 || error?.status === 403;
   }
 }
