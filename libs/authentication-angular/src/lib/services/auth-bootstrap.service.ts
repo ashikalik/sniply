@@ -13,23 +13,18 @@ export class AuthBootstrapService {
   initialize(): Observable<boolean> {
     this.authState.restoreFromStorage();
 
-    return this.authApi.me().pipe(
+    // Resolve identity from auth service session first to avoid stale user state
+    // when moving between apps running on different origins.
+    return this.authApi.refresh().pipe(
+      switchMap(() => this.authApi.me()),
       map(() => true),
       catchError((error: { status?: number }) => {
-        if (!this.isUnauthorized(error)) {
-          return of(this.authState.isAuthenticated);
+        if (this.isUnauthorized(error)) {
+          this.authState.clearSession();
+          return of(false);
         }
 
-        return this.authApi.refresh().pipe(
-          switchMap(() => this.authApi.me()),
-          map(() => true),
-          catchError((refreshError: { status?: number }) => {
-            if (this.isUnauthorized(refreshError)) {
-              this.authState.clearSession();
-            }
-            return of(this.authState.isAuthenticated);
-          }),
-        );
+        return of(this.authState.isAuthenticated);
       }),
     );
   }

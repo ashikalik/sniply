@@ -1,4 +1,10 @@
-import { Component, inject } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import {
   AbstractControl,
@@ -9,6 +15,12 @@ import {
   Validators,
 } from '@angular/forms';
 import { AuthApiService } from '@sniply/authentication-angular';
+import {
+  getGoogleIdentityApi,
+  IGoogleCredentialResponse,
+  loadGoogleIdentityScript,
+} from '../../common/google-identity';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-register-page',
@@ -16,7 +28,7 @@ import { AuthApiService } from '@sniply/authentication-angular';
   templateUrl: './register-page.html',
   styleUrl: './register-page.scss',
 })
-export class RegisterPage {
+export class RegisterPage implements AfterViewInit {
   private readonly fb = inject(FormBuilder);
   private readonly authApi = inject(AuthApiService);
   private readonly router = inject(Router);
@@ -36,6 +48,8 @@ export class RegisterPage {
 
   protected isSubmitting = false;
   protected errorMessage = '';
+  @ViewChild('googleButtonContainer')
+  private googleButtonContainer?: ElementRef<HTMLDivElement>;
 
   protected readonly registerForm = this.fb.nonNullable.group(
     {
@@ -47,6 +61,10 @@ export class RegisterPage {
     },
     { validators: this.passwordsMatchValidator },
   );
+
+  async ngAfterViewInit() {
+    await this.initializeGoogleButton();
+  }
 
   protected submit() {
     this.errorMessage = '';
@@ -69,6 +87,59 @@ export class RegisterPage {
         this.errorMessage =
           error?.error?.message ??
           'Registration failed. Please check your details and try again.';
+      },
+    });
+  }
+
+  private async initializeGoogleButton() {
+    if (!environment.apps.googleClientId || !this.googleButtonContainer) {
+      return;
+    }
+
+    try {
+      await loadGoogleIdentityScript();
+      const google = getGoogleIdentityApi();
+      if (!google) {
+        return;
+      }
+
+      google.accounts.id.initialize({
+        client_id: environment.apps.googleClientId,
+        callback: (response: IGoogleCredentialResponse) =>
+          this.loginWithGoogleCredential(response.credential),
+      });
+
+      google.accounts.id.renderButton(this.googleButtonContainer.nativeElement, {
+        type: 'standard',
+        theme: 'outline',
+        size: 'large',
+        text: 'signup_with',
+        shape: 'rectangular',
+        width: 360,
+      });
+    } catch {
+      this.errorMessage = 'Unable to initialize Google sign-in.';
+    }
+  }
+
+  private loginWithGoogleCredential(idToken?: string) {
+    if (!idToken) {
+      this.errorMessage = 'Google sign-in did not return a valid token.';
+      return;
+    }
+
+    this.errorMessage = '';
+    this.isSubmitting = true;
+
+    this.authApi.loginGoogle({ idToken }).subscribe({
+      next: () => {
+        this.isSubmitting = false;
+        void this.router.navigate(['/']);
+      },
+      error: (error: { error?: { message?: string } }) => {
+        this.isSubmitting = false;
+        this.errorMessage =
+          error?.error?.message ?? 'Google sign-in failed. Please try again.';
       },
     });
   }

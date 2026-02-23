@@ -6,6 +6,7 @@ export const environment = {
   },
   apps: {
     sniplyAppBaseUrl: 'http://localhost:4201',
+    googleClientId: '',
   },
   endpoints: {
     sniplyAppLinkForm: '/link-form',

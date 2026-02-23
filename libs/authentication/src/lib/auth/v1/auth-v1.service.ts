@@ -40,13 +40,13 @@ interface ILoginGoogleBody {
 }
 
 interface IRefreshBody {
-  refreshToken: string;
+  refreshToken?: string;
   userAgent?: string;
   ip?: string;
 }
 
 interface ILogoutBody {
-  refreshToken: string;
+  refreshToken?: string;
 }
 
 @Injectable()

@@ -97,8 +97,9 @@ export class AuthApiService {
       .pipe(tap((user) => this.authState.setUser(user)));
   }
 
-  refresh(): Observable<IAuthSessionModel> {
-    const refreshToken = this.authState.refreshToken;
+  refresh(input?: { useStoredRefreshToken?: boolean }): Observable<IAuthSessionModel> {
+    const refreshToken =
+      input?.useStoredRefreshToken === true ? this.authState.refreshToken : null;
     return this.http
       .post<IAuthSessionModel>(
         `${this.config.authBaseUrl}/auth/v1/refresh`,
@@ -120,7 +121,7 @@ export class AuthApiService {
   logout(input?: { refreshToken?: string }): Observable<{ success: boolean }> {
     const payload = {
       ...(input ?? {}),
-      refreshToken: input?.refreshToken ?? this.authState.refreshToken ?? undefined,
+      refreshToken: input?.refreshToken ?? undefined,
     };
     return this.http
       .post<{ success: boolean }>(
