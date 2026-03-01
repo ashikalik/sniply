@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ISniplyLinkV1 } from '@sniply/interfaces';
+import { buildShortUrl } from '../../../common/short-url';
 
 @Injectable()
 export class ReadLinkV1Helper {
@@ -17,8 +18,6 @@ export class ReadLinkV1Helper {
   }
 
   private buildShortUrl(code: string) {
-    const baseUrl =
-      process.env.SHORT_BASE_URL ?? 'https://t.yourdomain.com';
-    return `${baseUrl.replace(/\/$/, '')}/${code}`;
+    return buildShortUrl(code);
   }
 }

@@ -10,6 +10,7 @@ import {
   ISniplyLinkV1UpdateRequest,
 } from '@sniply/interfaces';
 import { SNIPLY_LINK_V1_UPDATE } from './update-link-v1.tokens';
+import { buildShortUrl } from '../../../common/short-url';
 import { validateHttpUrl } from '../../../common/url-validation';
 
 @Injectable()
@@ -57,14 +58,10 @@ export class UpdateLinkV1Service {
       throw new BadRequestException('Link not found');
     }
 
-    const baseUrl =
-      process.env.SHORT_BASE_URL ?? 'https://t.yourdomain.com';
-    const shortUrl = `${baseUrl.replace(/\/$/, '')}/${updated.code}`;
-
     return {
       id: updated.id,
       code: updated.code,
-      shortUrl,
+      shortUrl: buildShortUrl(updated.code),
       longUrl: updated.long_url,
       expiresAt: updated.expires_at?.toISOString() ?? null,
       createdAt: updated.created_at?.toISOString() ?? null,

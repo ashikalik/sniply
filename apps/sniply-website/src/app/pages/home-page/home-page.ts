@@ -15,8 +15,6 @@ import { environment } from '../../../environments/environment';
   styleUrl: './home-page.scss',
 })
 export class HomePage {
-  private static readonly DEFAULT_QR_COLOR = '#0f172a';
-
   private readonly fb = inject(FormBuilder);
   private readonly authState = inject(AuthStateService);
   private readonly router = inject(Router);
@@ -31,8 +29,6 @@ export class HomePage {
 
   protected readonly qrForm = this.fb.nonNullable.group({
     destinationUrl: ['', [Validators.required]],
-    label: [''],
-    foregroundColor: [HomePage.DEFAULT_QR_COLOR],
   });
 
   protected submitLink() {
@@ -55,17 +51,13 @@ export class HomePage {
 
     const payload = {
       targetUrl: this.qrForm.controls.destinationUrl.value.trim(),
-      label: this.qrForm.controls.label.value.trim() || null,
-      foregroundColor:
-        this.qrForm.controls.foregroundColor.value.trim() ||
-        HomePage.DEFAULT_QR_COLOR,
     };
     this.redirectToSniplyAppIfAuthenticated('qr-form', payload, 'qr');
   }
 
   private redirectToSniplyAppIfAuthenticated(
     route: 'link-form' | 'qr-form',
-    payload: string | { targetUrl: string; label: string | null; foregroundColor: string },
+    payload: string | { targetUrl: string },
     mode: 'link' | 'qr',
   ) {
     if (!this.authState.isAuthenticated) {

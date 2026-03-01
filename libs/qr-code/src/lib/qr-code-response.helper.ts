@@ -42,7 +42,8 @@ export async function toQrCodeResponse(
 }
 
 export function buildRedirectUrl(code: string) {
-  const baseUrl = process.env['SHORT_BASE_URL'] ?? 'http://localhost:3001';
+  const configured = process.env['SHORT_BASE_URL']?.trim();
+  const baseUrl = configured || `http://localhost:${process.env['PORT']?.trim() || '3001'}`;
   return `${baseUrl.replace(/\/$/, '')}/q/${code}`;
 }
 

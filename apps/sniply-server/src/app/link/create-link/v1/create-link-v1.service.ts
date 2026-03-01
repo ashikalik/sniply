@@ -11,6 +11,7 @@ import {
 } from '@sniply/interfaces';
 import { SNIPLY_LINK_V1_CREATE } from './create-link-v1.tokens';
 import { randomBytes } from 'crypto';
+import { buildShortUrl } from '../../../common/short-url';
 import { validateHttpUrl } from '../../../common/url-validation';
 
 @Injectable()
@@ -53,14 +54,10 @@ export class CreateLinkV1Service {
 
     const saved = await this.creator.create(record as ISniplyLinkV1);
 
-    const baseUrl =
-      process.env.SHORT_BASE_URL ?? 'https://t.yourdomain.com';
-    const shortUrl = `${baseUrl.replace(/\/$/, '')}/${saved.code}`;
-
     return {
       id: saved.id,
       code: saved.code,
-      shortUrl,
+      shortUrl: buildShortUrl(saved.code),
       longUrl: saved.long_url,
       expiresAt: saved.expires_at?.toISOString() ?? null,
       createdAt: saved.created_at?.toISOString() ?? null,
