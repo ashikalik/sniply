@@ -4,7 +4,7 @@ export interface ISniplyLinkV1 {
   long_url: string;
   domain?: string | null;
   title?: string | null;
-  created_by_user_id?: string | null;
+  created_by_user_id: string;
   is_active: boolean;
   expires_at?: Date | null;
   max_clicks?: number | null;

@@ -11,6 +11,8 @@ import { CreateLinkClicks20260207140959 } from '../migrations/20260207140959-cre
 import { CreateSniplyQrCodes20260301103000 } from '../migrations/20260301103000-create-sniply-qr-codes';
 import { JwtAuthGuard } from '@sniply/authentication';
 import { JwtVerifierService } from '@sniply/authentication';
+import { CreateAuthCore20260222160000 } from '@sniply/authentication';
+import { AddSniplyIntegrityConstraints20260301113000 } from '../migrations/20260301113000-add-sniply-integrity-constraints';
 
 @Module({
   imports: [
@@ -28,9 +30,11 @@ import { JwtVerifierService } from '@sniply/authentication';
       autoLoadEntities: true,
       synchronize: false,
       migrations: [
+        CreateAuthCore20260222160000,
         CreateSniplyLinks20260207122907,
         CreateLinkClicks20260207140959,
         CreateSniplyQrCodes20260301103000,
+        AddSniplyIntegrityConstraints20260301113000,
       ],
     }),
     LinkModule,

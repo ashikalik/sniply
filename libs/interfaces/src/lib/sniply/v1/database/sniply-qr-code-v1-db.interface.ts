@@ -5,7 +5,7 @@ export interface ISniplyQrCodeV1 {
   domain?: string | null;
   label?: string | null;
   foreground_color?: string | null;
-  created_by_user_id?: string | null;
+  created_by_user_id: string;
   is_active: boolean;
   expires_at?: Date | null;
   scan_count: number;

@@ -29,8 +29,8 @@ export class SniplyLinkV1Entity {
   @Column({ type: 'varchar', nullable: true })
   title?: string | null;
 
-  @Column({ type: 'uuid', nullable: true })
-  created_by_user_id?: string | null;
+  @Column({ type: 'uuid' })
+  created_by_user_id!: string;
 
   @Column({ type: 'boolean', default: true })
   is_active!: boolean;

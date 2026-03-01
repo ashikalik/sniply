@@ -32,8 +32,8 @@ export class SniplyQrCodeV1Entity {
   @Column({ type: 'varchar', length: 32, nullable: true })
   foreground_color?: string | null;
 
-  @Column({ type: 'uuid', nullable: true })
-  created_by_user_id?: string | null;
+  @Column({ type: 'uuid' })
+  created_by_user_id!: string;
 
   @Column({ type: 'boolean', default: true })
   is_active!: boolean;
