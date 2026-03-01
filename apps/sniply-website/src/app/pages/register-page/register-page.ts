@@ -5,7 +5,7 @@ import {
   ViewChild,
   inject,
 } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import {
   AbstractControl,
   FormBuilder,
@@ -32,6 +32,7 @@ export class RegisterPage implements AfterViewInit {
   private readonly fb = inject(FormBuilder);
   private readonly authApi = inject(AuthApiService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   private readonly passwordsMatchValidator: ValidatorFn = (
     control: AbstractControl,
@@ -139,7 +140,7 @@ export class RegisterPage implements AfterViewInit {
     this.authApi.loginGoogle({ idToken }).subscribe({
       next: () => {
         this.isSubmitting = false;
-        void this.router.navigate(['/']);
+        this.redirectToPendingDestination();
       },
       error: (error: { error?: { message?: string } }) => {
         this.isSubmitting = false;
@@ -147,5 +148,31 @@ export class RegisterPage implements AfterViewInit {
           error?.error?.message ?? 'Google sign-in failed. Please try again.';
       },
     });
+  }
+
+  private redirectToPendingDestination() {
+    const params = this.route.snapshot.queryParamMap;
+    const appRoute = params.get('appRoute');
+    if (appRoute !== 'link-form' && appRoute !== 'qr-form') {
+      void this.router.navigate(['/']);
+      return;
+    }
+
+    const redirectUrl = new URL(
+      `${environment.apps.sniplyAppBaseUrl}/${appRoute}`,
+    );
+
+    const target = params.get('target')?.trim();
+    const qr = params.get('qr')?.trim();
+
+    if (target) {
+      redirectUrl.searchParams.set('target', target);
+    }
+
+    if (qr) {
+      redirectUrl.searchParams.set('qr', qr);
+    }
+
+    window.location.assign(redirectUrl.toString());
   }
 }

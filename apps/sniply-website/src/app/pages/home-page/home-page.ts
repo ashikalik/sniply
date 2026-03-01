@@ -66,7 +66,17 @@ export class HomePage {
       } else {
         this.qrError = 'Please sign in to continue creating QR codes.';
       }
-      void this.router.navigate(['/login']);
+      void this.router.navigate(['/login'], {
+        queryParams: {
+          appRoute: route,
+          target: mode === 'link' && typeof payload === 'string'
+            ? this.toBase64(payload)
+            : null,
+          qr: mode === 'qr' && typeof payload !== 'string'
+            ? this.toBase64(JSON.stringify(payload))
+            : null,
+        },
+      });
       return;
     }
 
