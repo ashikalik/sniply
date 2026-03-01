@@ -275,7 +275,7 @@ export class AuthV1Service {
 
   async refresh(body: IRefreshBody) {
     if (!body.refreshToken?.trim()) {
-      throw new BadRequestException('refreshToken is required');
+      throw new UnauthorizedException('Invalid refresh token');
     }
 
     const now = new Date();
@@ -313,7 +313,7 @@ export class AuthV1Service {
 
   async logout(body: ILogoutBody) {
     if (!body.refreshToken?.trim()) {
-      throw new BadRequestException('refreshToken is required');
+      return { success: true };
     }
 
     const refreshTokenHash = hashToken(body.refreshToken);

@@ -5,7 +5,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthStateService, IAuthUserModel } from '@sniply/authentication-angular';
+import { AuthStateService } from '@sniply/authentication-angular';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -70,12 +70,6 @@ export class HomePage {
       return;
     }
 
-    const encodedAccessToken = this.toBase64(this.authState.accessToken ?? '');
-    const encodedRefreshToken = this.toBase64(this.authState.refreshToken ?? '');
-    const encodedUser = this.toBase64(
-      JSON.stringify(this.authState.user as IAuthUserModel),
-    );
-
     const targetPath = route === 'link-form'
       ? environment.endpoints.sniplyAppLinkForm
       : environment.endpoints.sniplyAppQrForm;
@@ -88,9 +82,6 @@ export class HomePage {
     if (mode === 'qr' && typeof payload !== 'string') {
       redirectUrl.searchParams.set('qr', this.toBase64(JSON.stringify(payload)));
     }
-    redirectUrl.searchParams.set('at', encodedAccessToken);
-    redirectUrl.searchParams.set('rt', encodedRefreshToken);
-    redirectUrl.searchParams.set('u', encodedUser);
 
     window.location.assign(redirectUrl.toString());
   }
