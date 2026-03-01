@@ -3,10 +3,40 @@
     <div class="success-card">
       <h1 class="h3 mb-2">Account created successfully</h1>
       <p class="text-muted mb-4">
-        Your account is ready. You can sign in now and continue to your workspace.
+        Your account is ready. Verify your email, then sign in and continue to your workspace.
       </p>
+      @if (email$ | async; as email) {
+        @if (email) {
+          <p class="mb-3">
+            <span class="text-muted">Account email:</span>
+            <strong>{{ email }}</strong>
+          </p>
+        }
+      }
+      @if (verifyToken$ | async; as verifyToken) {
+        @if (verifyToken) {
+          <div class="alert alert-info mb-4" role="alert">
+            <div class="fw-semibold mb-1">Verification token generated</div>
+            <div class="small text-break mb-3">{{ verifyToken }}</div>
+            <a
+              class="btn btn-sm btn-outline-primary"
+              [routerLink]="['/verify-email']"
+              [queryParams]="{ token: verifyToken }"
+            >
+              Verify email now
+            </a>
+          </div>
+        } @else {
+          <div class="alert alert-secondary mb-4" role="alert">
+            Check your email for the verification link or token, then complete verification.
+          </div>
+        }
+      }
       <div class="d-flex gap-2 flex-wrap">
         <a href="/login" routerLink="/login" class="btn btn-primary">Go to Sign in</a>
+        <a href="/verify-email" routerLink="/verify-email" class="btn btn-outline-primary">
+          Verify email
+        </a>
         <a href="/" routerLink="/" class="btn btn-outline-secondary">Back to Home</a>
       </div>
     </div>

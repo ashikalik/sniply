@@ -7,8 +7,10 @@ import { PricingPage } from './pages/pricing-page/pricing-page';
 import { PrivacyPolicyPage } from './pages/privacy-policy-page/privacy-policy-page';
 import { RegisterPage } from './pages/register-page/register-page';
 import { RegisterSuccessPage } from './pages/register-success-page/register-success-page';
+import { ResetPasswordPage } from './pages/reset-password-page/reset-password-page';
 import { ResourcesPage } from './pages/resources-page/resources-page';
 import { TermsPage } from './pages/terms-page/terms-page';
+import { VerifyEmailPage } from './pages/verify-email-page/verify-email-page';
 
 export const appRoutes: Route[] = [
   {
@@ -30,6 +32,14 @@ export const appRoutes: Route[] = [
   {
     path: 'forgot-password',
     component: ForgotPasswordPage,
+  },
+  {
+    path: 'reset-password',
+    component: ResetPasswordPage,
+  },
+  {
+    path: 'verify-email',
+    component: VerifyEmailPage,
   },
   {
     path: 'terms',

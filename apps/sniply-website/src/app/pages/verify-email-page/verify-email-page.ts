@@ -5,50 +5,49 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { AuthApiService } from '@sniply/authentication-angular';
 
 @Component({
-  selector: 'app-forgot-password-page',
+  selector: 'app-verify-email-page',
   imports: [RouterModule, ReactiveFormsModule],
-  templateUrl: './forgot-password-page.html',
-  styleUrl: './forgot-password-page.scss',
+  templateUrl: './verify-email-page.html',
+  styleUrl: './verify-email-page.scss',
 })
-export class ForgotPasswordPage {
+export class VerifyEmailPage {
   private readonly fb = inject(FormBuilder);
   private readonly authApi = inject(AuthApiService);
+  private readonly route = inject(ActivatedRoute);
 
   protected isSubmitting = false;
   protected errorMessage = '';
   protected successMessage = '';
-  protected resetToken = '';
 
-  protected readonly forgotPasswordForm = this.fb.nonNullable.group({
-    email: ['', [Validators.required, Validators.email]],
+  protected readonly verifyEmailForm = this.fb.nonNullable.group({
+    token: [this.route.snapshot.queryParamMap.get('token')?.trim() ?? '', [Validators.required]],
   });
 
   protected submit() {
     this.errorMessage = '';
     this.successMessage = '';
-    this.resetToken = '';
 
-    if (this.forgotPasswordForm.invalid) {
-      this.forgotPasswordForm.markAllAsTouched();
+    if (this.verifyEmailForm.invalid) {
+      this.verifyEmailForm.markAllAsTouched();
       return;
     }
 
-    const { email } = this.forgotPasswordForm.getRawValue();
+    const { token } = this.verifyEmailForm.getRawValue();
     this.isSubmitting = true;
 
-    this.authApi.forgotPassword({ email }).subscribe({
-      next: (response) => {
+    this.authApi.verifyEmail({ token }).subscribe({
+      next: () => {
         this.isSubmitting = false;
-        this.successMessage = 'If the account exists, a reset link has been created.';
-        this.resetToken = response.resetToken ?? '';
+        this.successMessage = 'Email verified successfully. You can sign in now.';
       },
       error: (error: { error?: { message?: string } }) => {
         this.isSubmitting = false;
         this.errorMessage =
-          error?.error?.message ?? 'Unable to start password reset. Please try again.';
+          error?.error?.message ?? 'Unable to verify email. Please try again.';
       },
     });
   }

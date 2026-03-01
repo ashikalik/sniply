@@ -78,9 +78,14 @@ export class RegisterPage implements AfterViewInit {
     this.isSubmitting = true;
 
     this.authApi.registerEmail({ email: workEmail, password }).subscribe({
-      next: () => {
+      next: (response) => {
         this.isSubmitting = false;
-        void this.router.navigate(['/register-success']);
+        void this.router.navigate(['/register-success'], {
+          queryParams: {
+            email: workEmail,
+            token: response.verifyEmailToken ?? null,
+          },
+        });
       },
       error: (error: { error?: { message?: string } }) => {
         this.isSubmitting = false;
