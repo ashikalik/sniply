@@ -30,6 +30,12 @@
   </div>
 
   <div class="col-12">
-    <button class="btn btn-primary" type="submit">Generate QR code</button>
+    <button class="btn btn-primary" type="submit" [disabled]="isSubmitting">
+      @if (isSubmitting) {
+        Generating...
+      } @else {
+        Generate QR code
+      }
+    </button>
   </div>
 </form>

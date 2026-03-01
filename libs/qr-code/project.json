@@ -1,0 +1,28 @@
+{
+  "name": "qr-code",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/qr-code/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/qr-code",
+        "main": "libs/qr-code/src/index.ts",
+        "tsConfig": "libs/qr-code/tsconfig.lib.json",
+        "assets": ["libs/qr-code/README.md"]
+      },
+      "configurations": {
+        "production": {}
+      }
+    },
+    "build:prod": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nx run qr-code:build:production"
+      }
+    }
+  }
+}

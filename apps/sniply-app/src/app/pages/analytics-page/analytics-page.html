@@ -5,7 +5,7 @@
       <input
         class="form-control form-control-sm"
         type="text"
-        placeholder="Enter link code"
+        [placeholder]="resourceType === 'qr' ? 'Enter QR code' : 'Enter link code'"
         formControlName="code"
       />
       <button class="btn btn-primary btn-sm" type="submit" [disabled]="loading">Load</button>
@@ -20,7 +20,7 @@
     <div class="col-12 col-md-6">
       <article class="card border-0 shadow-sm h-100">
         <div class="card-body">
-          <div class="text-secondary small">Total Clicks (Last 24h)</div>
+          <div class="text-secondary small">{{ metricLabel }}</div>
           <div class="h3 mb-0">{{ data?.total ?? 0 }}</div>
         </div>
       </article>
@@ -37,17 +37,17 @@
 
   <article class="card border-0 shadow-sm">
     <div class="card-body">
-      <h2 class="h5">Clicks</h2>
+      <h2 class="h5">{{ recordsLabel }}</h2>
       @if (loading) {
         <p class="text-secondary mb-0">Loading analytics...</p>
       } @else if (!data || data.clicks.length === 0) {
-        <p class="text-secondary mb-0">No clicks found in the selected range.</p>
+        <p class="text-secondary mb-0">{{ emptyLabel }}</p>
       } @else {
         <div class="table-responsive">
           <table class="table table-sm table-hover mb-0">
             <thead>
               <tr>
-                <th>Clicked At</th>
+                <th>{{ resourceType === 'qr' ? 'Scanned At' : 'Clicked At' }}</th>
                 <th>Country</th>
                 <th>Device</th>
                 <th>Referrer</th>
@@ -56,7 +56,7 @@
             <tbody>
               @for (click of data.clicks; track click.id) {
                 <tr>
-                  <td>{{ click.clicked_at ? (click.clicked_at | date: 'short') : '-' }}</td>
+                  <td>{{ getTimestamp(click) ? (getTimestamp(click) | date: 'short') : '-' }}</td>
                   <td>{{ click.country || '-' }}</td>
                   <td>{{ click.device_type || '-' }}</td>
                   <td class="text-break">{{ click.referrer || '-' }}</td>

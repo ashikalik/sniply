@@ -11,7 +11,7 @@ import {
 } from '@sniply/interfaces';
 import { SNIPLY_LINK_V1_CREATE } from './create-link-v1.tokens';
 import { randomBytes } from 'crypto';
-import { validateHttpUrl } from '../../common/url-validation';
+import { validateHttpUrl } from '../../../common/url-validation';
 
 @Injectable()
 export class CreateLinkV1Service {

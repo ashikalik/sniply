@@ -11,6 +11,7 @@ import { LoginPage } from './pages/login-page/login-page';
 import { PagesListPage } from './pages/pages-list-page/pages-list-page';
 import { PrivacyPolicyPage } from './pages/privacy-policy-page/privacy-policy-page';
 import { QrFormPage } from './pages/qr-form-page/qr-form-page';
+import { QrDetailsPage } from './pages/qr-details-page/qr-details-page';
 import { QrListPage } from './pages/qr-list-page/qr-list-page';
 import { SettingsPage } from './pages/settings-page/settings-page';
 import { TermsPage } from './pages/terms-page/terms-page';
@@ -32,6 +33,7 @@ export const appRoutes: Route[] = [
       { path: 'link-details/:code', component: LinkDetailsPage },
       { path: 'qr-codes', component: QrListPage },
       { path: 'qr-form', component: QrFormPage },
+      { path: 'qr-details/:code', component: QrDetailsPage },
       { path: 'pages', component: PagesListPage },
       { path: 'analytics', component: AnalyticsPage },
       { path: 'campaigns', component: CampaignsPage },

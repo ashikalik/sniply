@@ -10,7 +10,7 @@ import {
   ISniplyLinkV1UpdateRequest,
 } from '@sniply/interfaces';
 import { SNIPLY_LINK_V1_UPDATE } from './update-link-v1.tokens';
-import { validateHttpUrl } from '../../common/url-validation';
+import { validateHttpUrl } from '../../../common/url-validation';
 
 @Injectable()
 export class UpdateLinkV1Service {

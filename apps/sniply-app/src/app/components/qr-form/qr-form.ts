@@ -1,4 +1,12 @@
-import { Component, Input, OnChanges, SimpleChanges, inject } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  inject,
+} from '@angular/core';
 import {
   FormBuilder,
   ReactiveFormsModule,
@@ -13,6 +21,14 @@ import {
 })
 export class QrFormComponent implements OnChanges {
   @Input() prefillTargetUrl = '';
+  @Input() prefillLabel = '';
+  @Input() prefillForegroundColor = '';
+  @Input() isSubmitting = false;
+  @Output() formSubmit = new EventEmitter<{
+    targetUrl: string;
+    label: string | null;
+    foregroundColor: string | null;
+  }>();
 
   private readonly fb = inject(FormBuilder);
 
@@ -24,9 +40,14 @@ export class QrFormComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     const nextUrl = changes['prefillTargetUrl']?.currentValue as string | undefined;
-    if (nextUrl) {
-      this.form.patchValue({ destinationUrl: nextUrl });
-    }
+    const nextLabel = changes['prefillLabel']?.currentValue as string | undefined;
+    const nextColor = changes['prefillForegroundColor']?.currentValue as string | undefined;
+
+    this.form.patchValue({
+      destinationUrl: nextUrl || this.form.controls.destinationUrl.value,
+      label: nextLabel ?? this.form.controls.label.value,
+      color: nextColor || this.form.controls.color.value,
+    });
   }
 
   protected submit() {
@@ -34,5 +55,12 @@ export class QrFormComponent implements OnChanges {
       this.form.markAllAsTouched();
       return;
     }
+
+    const { destinationUrl, label, color } = this.form.getRawValue();
+    this.formSubmit.emit({
+      targetUrl: destinationUrl.trim(),
+      label: label.trim() || null,
+      foregroundColor: color.trim() || null,
+    });
   }
 }

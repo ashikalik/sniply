@@ -1,23 +1,124 @@
 <section class="d-grid gap-3">
-  <h1 class="h3 mb-0">QR List</h1>
+  <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap">
+    <h1 class="h3 mb-0">QR Codes</h1>
+    <div class="d-flex align-items-center gap-2">
+      <button
+        class="btn btn-outline-danger btn-sm"
+        type="button"
+        [disabled]="selectedCount === 0 || deletingSelected"
+        (click)="promptDeleteSelected()"
+      >
+        Delete
+      </button>
+      <a class="btn btn-primary btn-sm" routerLink="/qr-form">Create QR code</a>
+    </div>
+  </div>
+
   <article class="card border-0 shadow-sm">
     <div class="card-body">
+      @if (errorMessage) {
+        <div class="alert alert-danger" role="alert">{{ errorMessage }}</div>
+      }
+
       <div class="table-responsive">
-        <table class="table table-hover mb-0">
+        <table class="table table-hover align-middle mb-0">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Destination</th>
+              <th>
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  [checked]="allSelected"
+                  [disabled]="qrCodes.length === 0 || loading"
+                  (change)="toggleAll($any($event.target).checked)"
+                />
+              </th>
+              <th>QR</th>
+              <th>Code</th>
+              <th>Label</th>
+              <th>Target URL</th>
               <th>Scans</th>
-              <th>Updated</th>
+              <th>Created</th>
+              <th>Analytics</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td>Booth handout</td><td>snip.ly/booth</td><td>411</td><td>2h ago</td></tr>
-            <tr><td>Menu card</td><td>snip.ly/menu</td><td>980</td><td>Yesterday</td></tr>
+            @if (loading) {
+              <tr>
+                <td colspan="8" class="text-center py-4 text-secondary">Loading QR codes...</td>
+              </tr>
+            } @else if (qrCodes.length === 0) {
+              <tr>
+                <td colspan="8" class="text-center py-4 text-secondary">No QR codes found.</td>
+              </tr>
+            } @else {
+              @for (qrCode of qrCodes; track qrCode.id) {
+                <tr>
+                  <td>
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      [checked]="isChecked(qrCode.code)"
+                      (change)="toggleItem(qrCode.code, $any($event.target).checked)"
+                    />
+                  </td>
+                  <td>
+                    <a [routerLink]="['/qr-details', qrCode.code]">
+                      <img class="qr-thumb rounded border" [src]="qrCode.qrImageUrl" [alt]="'QR ' + qrCode.code" />
+                    </a>
+                  </td>
+                  <td>
+                    <a [routerLink]="['/qr-details', qrCode.code]">{{ qrCode.code }}</a>
+                  </td>
+                  <td>{{ qrCode.label || '-' }}</td>
+                  <td class="text-truncate-cell">
+                    <a [href]="qrCode.targetUrl" target="_blank" rel="noopener noreferrer">
+                      {{ qrCode.targetUrl }}
+                    </a>
+                  </td>
+                  <td>{{ qrCode.scans }}</td>
+                  <td>{{ qrCode.createdAt ? (qrCode.createdAt | date: 'short') : '-' }}</td>
+                  <td>
+                    <a
+                      class="btn btn-outline-secondary btn-sm"
+                      [routerLink]="['/analytics']"
+                      [queryParams]="{ code: qrCode.code, type: 'qr' }"
+                      title="View analytics"
+                    >
+                      <i class="bi bi-graph-up"></i>
+                    </a>
+                  </td>
+                </tr>
+              }
+            }
           </tbody>
         </table>
       </div>
+
+      <div class="d-flex justify-content-between align-items-center mt-3">
+        <small class="text-secondary">
+          Showing {{ qrCodes.length > 0 ? start + 1 : 0 }} - {{ start + qrCodes.length }} of {{ total }}
+        </small>
+        <div class="btn-group btn-group-sm" role="group">
+          <button class="btn btn-outline-secondary" type="button" (click)="previousPage()" [disabled]="!canGoPrevious">
+            Previous
+          </button>
+          <button class="btn btn-outline-secondary" type="button" (click)="nextPage()" [disabled]="!canGoNext">
+            Next
+          </button>
+        </div>
+      </div>
     </div>
   </article>
+
+  <app-popup-confirmation
+    [visible]="showDeleteConfirmation"
+    [loading]="deletingSelected"
+    [title]="'Delete selected QR codes?'"
+    [message]="'This action will permanently delete ' + selectedCount + ' selected QR code(s).'"
+    [confirmText]="'Delete'"
+    [cancelText]="'Cancel'"
+    (confirmed)="confirmDeleteSelected()"
+    (cancelled)="cancelDeleteSelected()"
+  ></app-popup-confirmation>
 </section>

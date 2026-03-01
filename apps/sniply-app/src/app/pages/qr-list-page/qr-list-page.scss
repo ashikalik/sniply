@@ -1,1 +1,14 @@
 @use '../shared-page';
+
+.text-truncate-cell {
+  max-width: 320px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.qr-thumb {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+}

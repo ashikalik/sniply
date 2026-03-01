@@ -29,23 +29,31 @@
               {{ getInitial(user.email) }}
             </span>
           </button>
-          <ul class="dropdown-menu dropdown-menu-end shadow-sm">
-            <li>
-              <div class="dropdown-item-text small text-secondary text-truncate">
-                {{ user.email }}
+          <div class="dropdown-menu dropdown-menu-end shadow-sm profile-popover">
+            <div class="px-3 py-2 border-bottom">
+              <div class="fw-semibold text-dark text-truncate">{{ user.email }}</div>
+              <div class="small text-muted">ID: {{ getShortId(user.id) }}</div>
+            </div>
+            <div class="px-3 py-2 small">
+              <div class="d-flex justify-content-between">
+                <span class="text-muted">Status</span>
+                <span class="text-capitalize">{{ user.status ?? 'active' }}</span>
               </div>
-            </li>
-            <li><hr class="dropdown-divider" /></li>
-            <li>
-              <button class="dropdown-item" type="button" (click)="logout()" [disabled]="isLoggingOut">
+              <div class="d-flex justify-content-between mt-1">
+                <span class="text-muted">Verified</span>
+                <span>{{ user.emailVerifiedAt ? 'Yes' : 'No' }}</span>
+              </div>
+            </div>
+            <div class="border-top p-2">
+              <button class="btn btn-outline-danger btn-sm w-100" type="button" (click)="logout()" [disabled]="isLoggingOut">
                 @if (isLoggingOut) {
                   Logging out...
                 } @else {
                   Logout
                 }
               </button>
-            </li>
-          </ul>
+            </div>
+          </div>
         </div>
       } @else {
         <a class="btn btn-outline-primary btn-sm px-3" routerLink="/login">Login</a>

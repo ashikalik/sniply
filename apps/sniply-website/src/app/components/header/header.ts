@@ -1,7 +1,10 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { AuthStateService } from '@sniply/authentication-angular';
+import {
+  AuthApiService,
+  AuthStateService,
+} from '@sniply/authentication-angular';
 
 @Component({
   selector: 'app-header',
@@ -11,9 +14,37 @@ import { AuthStateService } from '@sniply/authentication-angular';
 })
 export class HeaderComponent {
   private readonly authState = inject(AuthStateService);
+  private readonly authApi = inject(AuthApiService);
   protected readonly user$ = this.authState.user$;
+  protected isLoggingOut = false;
 
   protected getInitial(email: string): string {
     return (email?.trim().charAt(0) ?? 'U').toUpperCase();
+  }
+
+  protected getShortId(id?: string): string {
+    if (!id) {
+      return '-';
+    }
+
+    return id.slice(0, 8);
+  }
+
+  protected logout() {
+    if (this.isLoggingOut) {
+      return;
+    }
+
+    this.isLoggingOut = true;
+    this.authApi.logout().subscribe({
+      next: () => {
+        this.isLoggingOut = false;
+        this.authState.clearSession();
+        window.location.assign('/');
+      },
+      error: () => {
+        this.isLoggingOut = false;
+      },
+    });
   }
 }

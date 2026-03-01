@@ -15,6 +15,8 @@ import { environment } from '../../../environments/environment';
   styleUrl: './home-page.scss',
 })
 export class HomePage {
+  private static readonly DEFAULT_QR_COLOR = '#0f172a';
+
   private readonly fb = inject(FormBuilder);
   private readonly authState = inject(AuthStateService);
   private readonly router = inject(Router);
@@ -30,6 +32,7 @@ export class HomePage {
   protected readonly qrForm = this.fb.nonNullable.group({
     destinationUrl: ['', [Validators.required]],
     label: [''],
+    foregroundColor: [HomePage.DEFAULT_QR_COLOR],
   });
 
   protected submitLink() {
@@ -50,13 +53,19 @@ export class HomePage {
       return;
     }
 
-    const destinationUrl = this.qrForm.controls.destinationUrl.value.trim();
-    this.redirectToSniplyAppIfAuthenticated('qr-form', destinationUrl, 'qr');
+    const payload = {
+      targetUrl: this.qrForm.controls.destinationUrl.value.trim(),
+      label: this.qrForm.controls.label.value.trim() || null,
+      foregroundColor:
+        this.qrForm.controls.foregroundColor.value.trim() ||
+        HomePage.DEFAULT_QR_COLOR,
+    };
+    this.redirectToSniplyAppIfAuthenticated('qr-form', payload, 'qr');
   }
 
   private redirectToSniplyAppIfAuthenticated(
     route: 'link-form' | 'qr-form',
-    url: string,
+    payload: string | { targetUrl: string; label: string | null; foregroundColor: string },
     mode: 'link' | 'qr',
   ) {
     if (!this.authState.isAuthenticated) {
@@ -69,7 +78,6 @@ export class HomePage {
       return;
     }
 
-    const encodedUrl = btoa(url);
     const encodedAccessToken = this.toBase64(this.authState.accessToken ?? '');
     const encodedRefreshToken = this.toBase64(this.authState.refreshToken ?? '');
     const encodedUser = this.toBase64(
@@ -82,7 +90,12 @@ export class HomePage {
     const redirectUrl = new URL(
       `${environment.apps.sniplyAppBaseUrl}${targetPath}`,
     );
-    redirectUrl.searchParams.set('target', encodedUrl);
+    if (mode === 'link' && typeof payload === 'string') {
+      redirectUrl.searchParams.set('target', this.toBase64(payload));
+    }
+    if (mode === 'qr' && typeof payload !== 'string') {
+      redirectUrl.searchParams.set('qr', this.toBase64(JSON.stringify(payload)));
+    }
     redirectUrl.searchParams.set('at', encodedAccessToken);
     redirectUrl.searchParams.set('rt', encodedRefreshToken);
     redirectUrl.searchParams.set('u', encodedUser);

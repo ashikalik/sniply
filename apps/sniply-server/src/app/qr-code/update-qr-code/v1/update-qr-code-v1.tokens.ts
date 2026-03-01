@@ -1,0 +1,1 @@
+export const SNIPLY_QR_CODE_V1_UPDATE = Symbol('SNIPLY_QR_CODE_V1_UPDATE');

@@ -4,15 +4,11 @@ import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CreateLinkModule } from './create-link/create-link.module';
-import { ReadLinkModule } from './read-link/read-link.module';
-import { NavigateLinkModule } from './navigate-link/navigate-link.module';
-import { UpdatedLinkModule } from './updated-link/updated-link.module';
-import { DeleteLinkModule } from './delete-link/delete-link.module';
-import { LinkAnalyticsModule } from './link-analytics/link-analytics.module';
-import { ListLinksModule } from './list-links/list-links.module';
+import { LinkModule } from './link/link.module';
+import { QrCodeModule } from './qr-code/qr-code.module';
 import { CreateSniplyLinks20260207122907 } from '../migrations/20260207122907-create-sniply-links';
 import { CreateLinkClicks20260207140959 } from '../migrations/20260207140959-create-link-clicks';
+import { CreateSniplyQrCodes20260301103000 } from '../migrations/20260301103000-create-sniply-qr-codes';
 import { JwtAuthGuard } from '@sniply/authentication';
 import { JwtVerifierService } from '@sniply/authentication';
 
@@ -34,15 +30,11 @@ import { JwtVerifierService } from '@sniply/authentication';
       migrations: [
         CreateSniplyLinks20260207122907,
         CreateLinkClicks20260207140959,
+        CreateSniplyQrCodes20260301103000,
       ],
     }),
-    CreateLinkModule,
-    UpdatedLinkModule,
-    ReadLinkModule,
-    NavigateLinkModule,
-    DeleteLinkModule,
-    LinkAnalyticsModule,
-    ListLinksModule,
+    LinkModule,
+    QrCodeModule,
   ],
   controllers: [AppController],
   providers: [

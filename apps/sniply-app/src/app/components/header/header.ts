@@ -23,6 +23,14 @@ export class HeaderComponent {
     return (email?.trim().charAt(0) ?? 'U').toUpperCase();
   }
 
+  protected getShortId(id?: string): string {
+    if (!id) {
+      return '-';
+    }
+
+    return id.slice(0, 8);
+  }
+
   protected logout() {
     if (this.isLoggingOut) {
       return;

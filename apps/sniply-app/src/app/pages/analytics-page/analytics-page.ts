@@ -12,6 +12,7 @@ import { environment } from '../../../environments/environment';
 interface IAnalyticsClick {
   id?: string;
   clicked_at?: string;
+  scanned_at?: string;
   country?: string | null;
   device_type?: string | null;
   referrer?: string;
@@ -23,6 +24,7 @@ interface IAnalyticsResponse {
   to: string | null;
   total: number;
   clicks: IAnalyticsClick[];
+  scans?: IAnalyticsClick[];
 }
 
 @Component({
@@ -40,6 +42,7 @@ export class AnalyticsPage implements OnInit {
   protected loading = false;
   protected errorMessage = '';
   protected data: IAnalyticsResponse | null = null;
+  protected resourceType: 'link' | 'qr' = 'link';
 
   protected readonly analyticsForm = this.fb.nonNullable.group({
     code: ['CW340I', [Validators.required]],
@@ -48,6 +51,8 @@ export class AnalyticsPage implements OnInit {
   ngOnInit(): void {
     this.route.queryParamMap.subscribe((params) => {
       const code = params.get('code')?.trim();
+      const type = params.get('type');
+      this.resourceType = type === 'qr' ? 'qr' : 'link';
       if (code) {
         this.analyticsForm.patchValue({ code });
       }
@@ -72,7 +77,7 @@ export class AnalyticsPage implements OnInit {
 
     this.http
       .get<IAnalyticsResponse | string>(
-        `${environment.api.baseUrl}${environment.endpoints.linksAnalyticsPrefix}/${encodeURIComponent(code)}/analytics`,
+        `${environment.api.baseUrl}${this.getAnalyticsPrefix()}/${encodeURIComponent(code)}/analytics`,
         {
           params: {
             from: fromIso,
@@ -113,6 +118,7 @@ export class AnalyticsPage implements OnInit {
       to: null,
       total: 0,
       clicks: [],
+      scans: [],
     };
 
     const parsed = (() => {
@@ -132,7 +138,40 @@ export class AnalyticsPage implements OnInit {
       from: parsed.from ?? null,
       to: parsed.to ?? null,
       total: Number(parsed.total ?? 0),
-      clicks: Array.isArray(parsed.clicks) ? parsed.clicks : [],
+      clicks: Array.isArray(parsed.clicks)
+        ? parsed.clicks
+        : Array.isArray(parsed.scans)
+          ? parsed.scans
+          : [],
+      scans: Array.isArray(parsed.scans) ? parsed.scans : [],
     };
+  }
+
+  protected get metricLabel() {
+    return this.resourceType === 'qr' ? 'Total Scans (Last 24h)' : 'Total Clicks (Last 24h)';
+  }
+
+  protected get recordsLabel() {
+    return this.resourceType === 'qr' ? 'Scans' : 'Clicks';
+  }
+
+  protected get emptyLabel() {
+    return this.resourceType === 'qr'
+      ? 'No scans found in the selected range.'
+      : 'No clicks found in the selected range.';
+  }
+
+  protected get timestampField() {
+    return this.resourceType === 'qr' ? 'scanned_at' : 'clicked_at';
+  }
+
+  protected getTimestamp(entry: IAnalyticsClick) {
+    return this.resourceType === 'qr' ? entry.scanned_at : entry.clicked_at;
+  }
+
+  private getAnalyticsPrefix() {
+    return this.resourceType === 'qr'
+      ? environment.endpoints.qrCodesAnalyticsPrefix
+      : environment.endpoints.linksAnalyticsPrefix;
   }
 }

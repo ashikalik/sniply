@@ -19,7 +19,8 @@
       "@sniply/authentication": ["libs/authentication/src/index.ts"],
       "@sniply/authentication-angular": [
         "libs/authentication-angular/src/index.ts"
-      ]
+      ],
+      "@sniply/qr-code": ["libs/qr-code/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

@@ -11,6 +11,11 @@ export const environment = {
     linksList: '/list-links',
     linksDelete: '/links/delete',
     linksAnalyticsPrefix: '/links',
+    qrCodesCreate: '/qr-codes/create',
+    qrCodesRead: '/qr-codes/read',
+    qrCodesList: '/qr-codes/list',
+    qrCodesDelete: '/qr-codes/delete',
+    qrCodesAnalyticsPrefix: '/qr-codes',
   },
   apps: {
     websiteLoginUrl: 'http://localhost:4200/login',
