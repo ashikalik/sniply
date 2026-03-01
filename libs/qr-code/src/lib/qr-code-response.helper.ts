@@ -42,9 +42,19 @@ export async function toQrCodeResponse(
 }
 
 export function buildRedirectUrl(code: string) {
-  const configured = process.env['SHORT_BASE_URL']?.trim();
-  const baseUrl = configured || `http://localhost:${process.env['PORT']?.trim() || '3001'}`;
-  return `${baseUrl.replace(/\/$/, '')}/q/${code}`;
+  const configured = (
+    process.env['SHORT_BASE_URL'] ??
+    process.env['PUBLIC_BASE_URL']
+  )?.trim();
+  if (configured) {
+    return `${configured.replace(/\/$/, '')}/q/${code}`;
+  }
+
+  if (process.env['NODE_ENV']?.trim().toLowerCase() === 'production') {
+    throw new Error('SHORT_BASE_URL or PUBLIC_BASE_URL is required in production');
+  }
+
+  return `http://localhost:${process.env['PORT']?.trim() || '3001'}/q/${code}`;
 }
 
 async function buildQrImageDataUrl(

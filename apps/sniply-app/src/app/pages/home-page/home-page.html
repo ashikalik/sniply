@@ -41,9 +41,21 @@
 
           <div class="border border-top-0 rounded-bottom p-3">
             @if (activeTab === 'links') {
-              <app-link-form></app-link-form>
+              @if (linkErrorMessage) {
+                <div class="alert alert-danger mb-3" role="alert">{{ linkErrorMessage }}</div>
+              }
+              <app-link-form
+                [isSubmitting]="isSubmittingLink"
+                (formSubmit)="createLink($event)"
+              ></app-link-form>
             } @else {
-              <app-qr-form></app-qr-form>
+              @if (qrErrorMessage) {
+                <div class="alert alert-danger mb-3" role="alert">{{ qrErrorMessage }}</div>
+              }
+              <app-qr-form
+                [isSubmitting]="isSubmittingQr"
+                (formSubmit)="createQrCode($event)"
+              ></app-qr-form>
             }
           </div>
         </div>

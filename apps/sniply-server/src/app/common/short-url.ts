@@ -1,7 +1,14 @@
 export function getShortBaseUrl() {
-  const configured = process.env['SHORT_BASE_URL']?.trim();
+  const configured = (
+    process.env['SHORT_BASE_URL'] ??
+    process.env['PUBLIC_BASE_URL']
+  )?.trim();
   if (configured) {
     return configured.replace(/\/$/, '');
+  }
+
+  if (process.env['NODE_ENV']?.trim().toLowerCase() === 'production') {
+    throw new Error('SHORT_BASE_URL or PUBLIC_BASE_URL is required in production');
   }
 
   const port = process.env['PORT']?.trim() || '3001';

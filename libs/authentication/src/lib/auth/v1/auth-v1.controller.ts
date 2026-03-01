@@ -8,15 +8,18 @@ import {
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Request, Response } from 'express';
+import { CookieOptions } from 'express';
 import { AuthV1Service } from './auth-v1.service';
 import { AccessTokenGuard, IAuthRequest } from '../../common/access-token.guard';
 
 @Controller('auth/v1')
 export class AuthV1Controller {
-  private static readonly REFRESH_COOKIE_NAME = 'sniply_refresh_token';
-
-  constructor(private readonly service: AuthV1Service) {}
+  constructor(
+    private readonly service: AuthV1Service,
+    private readonly configService: ConfigService,
+  ) {}
 
   @Post('register/email')
   registerEmail(
@@ -82,7 +85,7 @@ export class AuthV1Controller {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const refreshToken = body.refreshToken ?? this.getCookie(req, AuthV1Controller.REFRESH_COOKIE_NAME);
+    const refreshToken = body.refreshToken ?? this.getCookie(req, this.refreshCookieName);
     const userAgent = req.headers['user-agent'];
     return this.service
       .refresh({
@@ -106,7 +109,7 @@ export class AuthV1Controller {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const refreshToken = body.refreshToken ?? this.getCookie(req, AuthV1Controller.REFRESH_COOKIE_NAME);
+    const refreshToken = body.refreshToken ?? this.getCookie(req, this.refreshCookieName);
     this.clearRefreshCookie(res);
     return this.service.logout({ refreshToken });
   }
@@ -162,22 +165,14 @@ export class AuthV1Controller {
     refreshTokenExpiresAt: string,
   ) {
     const expires = new Date(refreshTokenExpiresAt);
-    res.cookie(AuthV1Controller.REFRESH_COOKIE_NAME, refreshToken, {
-      httpOnly: true,
-      secure: false,
-      sameSite: 'lax',
-      path: '/',
+    res.cookie(this.refreshCookieName, refreshToken, {
+      ...this.getRefreshCookieOptions(),
       expires: Number.isNaN(expires.getTime()) ? undefined : expires,
     });
   }
 
   private clearRefreshCookie(res: Response) {
-    res.clearCookie(AuthV1Controller.REFRESH_COOKIE_NAME, {
-      httpOnly: true,
-      secure: false,
-      sameSite: 'lax',
-      path: '/',
-    });
+    res.clearCookie(this.refreshCookieName, this.getRefreshCookieOptions());
   }
 
   private getCookie(req: Request, name: string): string | undefined {
@@ -195,5 +190,66 @@ export class AuthV1Controller {
     }
 
     return undefined;
+  }
+
+  private get refreshCookieName() {
+    return (
+      this.configService.get<string>('AUTH_REFRESH_COOKIE_NAME')?.trim() ||
+      'sniply_refresh_token'
+    );
+  }
+
+  private getRefreshCookieOptions(): CookieOptions {
+    const secure = this.getBooleanEnv(
+      'AUTH_COOKIE_SECURE',
+      this.isProductionEnvironment(),
+    );
+    const sameSite = this.getSameSiteEnv(
+      'AUTH_COOKIE_SAME_SITE',
+      secure ? 'none' : 'lax',
+    );
+    const domain = this.configService.get<string>('AUTH_COOKIE_DOMAIN')?.trim() || undefined;
+    const path = this.configService.get<string>('AUTH_COOKIE_PATH')?.trim() || '/';
+
+    return {
+      httpOnly: true,
+      secure,
+      sameSite,
+      domain,
+      path,
+    };
+  }
+
+  private getBooleanEnv(key: string, fallback: boolean) {
+    const value = this.configService.get<string>(key)?.trim().toLowerCase();
+    if (!value) {
+      return fallback;
+    }
+
+    if (value === 'true') {
+      return true;
+    }
+
+    if (value === 'false') {
+      return false;
+    }
+
+    return fallback;
+  }
+
+  private getSameSiteEnv(
+    key: string,
+    fallback: 'lax' | 'strict' | 'none',
+  ): 'lax' | 'strict' | 'none' {
+    const value = this.configService.get<string>(key)?.trim().toLowerCase();
+    if (value === 'lax' || value === 'strict' || value === 'none') {
+      return value;
+    }
+
+    return fallback;
+  }
+
+  private isProductionEnvironment() {
+    return this.configService.get<string>('NODE_ENV')?.trim().toLowerCase() === 'production';
   }
 }
