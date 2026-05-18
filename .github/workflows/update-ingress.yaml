@@ -1,0 +1,67 @@
+name: Update Ingress
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: hostinger-k3s-staging-ingress
+  cancel-in-progress: false
+
+env:
+  TARGET_NAMESPACE: sniply-staging
+
+jobs:
+  update-ingress:
+    runs-on: ubuntu-latest
+    environment: staging
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H "$VPS_HOST" >> ~/.ssh/known_hosts
+
+      - name: Apply ingress manifest
+        env:
+          TARGET_NAMESPACE: ${{ env.TARGET_NAMESPACE }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+        run: |
+          cat k8s/ingress.yaml | ssh "$VPS_USER@$VPS_HOST" "kubectl apply -n $TARGET_NAMESPACE -f -"
+
+      - name: Restart ingress controller
+        env:
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+        run: |
+          ssh "$VPS_USER@$VPS_HOST" '
+            set -euo pipefail
+            if kubectl get deployment ingress-nginx-controller -n ingress-nginx >/dev/null 2>&1; then
+              kubectl rollout restart deployment/ingress-nginx-controller -n ingress-nginx
+              kubectl rollout status deployment/ingress-nginx-controller -n ingress-nginx --timeout=180s
+            elif kubectl get daemonset ingress-nginx-controller -n ingress-nginx >/dev/null 2>&1; then
+              kubectl rollout restart daemonset/ingress-nginx-controller -n ingress-nginx
+              kubectl rollout status daemonset/ingress-nginx-controller -n ingress-nginx --timeout=180s
+            else
+              echo "ingress-nginx-controller not found in namespace ingress-nginx"
+              kubectl get deploy,ds -A | grep -i ingress || true
+              exit 1
+            fi
+          '
+
+      - name: Verify ingress
+        env:
+          TARGET_NAMESPACE: ${{ env.TARGET_NAMESPACE }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+        run: |
+          ssh "$VPS_USER@$VPS_HOST" "kubectl get ingress sniply-ingress -n $TARGET_NAMESPACE -o yaml"

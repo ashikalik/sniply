@@ -1,9 +1,9 @@
 export const environment = {
   production: true,
   api: {
-    authBaseUrl: 'http://localhost:3000',
-    baseUrl: 'http://localhost:3001',
-    linkBaseUrl: 'http://localhost:3001',
+    authBaseUrl: 'http://sniply.kodothgroup.com/auth',
+    baseUrl: 'http://sniply.kodothgroup.com/server',
+    linkBaseUrl: 'http://sniply.kodothgroup.com/server',
   },
   endpoints: {
     linksCreate: '/links/create',
@@ -18,6 +18,6 @@ export const environment = {
     qrCodesAnalyticsPrefix: '/qr-codes',
   },
   apps: {
-    websiteLoginUrl: 'http://localhost:4200/login',
+    websiteLoginUrl: 'http://sniply.kodothgroup.com/website/login',
   },
 };

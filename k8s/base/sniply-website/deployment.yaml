@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sniply-website
+  namespace: sniply-staging
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: sniply-website
+
+  template:
+    metadata:
+      labels:
+        app: sniply-website
+
+    spec:
+      imagePullSecrets:
+        - name: ghcr-secret
+      containers:
+        - name: sniply-website
+          image: ghcr.io/mithunmadhavan/sniply-website:latest
+          imagePullPolicy: Always
+
+          ports:
+            - containerPort: 4200

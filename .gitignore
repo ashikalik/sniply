@@ -86,3 +86,4 @@ Thumbs.db
 .Trashes
 
 .angular
+*.backup
