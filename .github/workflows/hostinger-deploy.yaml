@@ -6,6 +6,11 @@ on:
       - main
       - deploy/mithun
   workflow_dispatch:
+    inputs:
+      apps:
+        description: 'Comma-separated apps to deploy (e.g. sniply-server,sniply-auth). Leave empty to use Nx affected.'
+        required: false
+        default: ''
 
 concurrency:
   group: hostinger-k3s-staging
@@ -16,24 +21,94 @@ env:
   TARGET_NAMESPACE: sniply-staging
 
 jobs:
-  # Nx affected deployment is intentionally disabled for now.
-  # To re-enable in future:
-  # 1) Add a detect job that sets output `apps`.
-  # 2) Switch matrix to: app: ${{ fromJson(needs.detect-affected.outputs.apps) }}
-  # Example detect command:
-  #   npx nx show projects --affected --type app --base="$BASE_SHA" --head="$HEAD_SHA" --json
+  detect-affected:
+    runs-on: ubuntu-latest
+    outputs:
+      apps: ${{ steps.detect.outputs.apps }}
+      count: ${{ steps.detect.outputs.count }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Detect deployable affected apps
+        id: detect
+        shell: bash
+        run: |
+          MANUAL_APPS_INPUT="${{ github.event.inputs.apps || '' }}"
+          if [[ -n "$MANUAL_APPS_INPUT" ]]; then
+            AFFECTED_JSON=$(MANUAL_APPS_INPUT="$MANUAL_APPS_INPUT" node -e "const raw=process.env.MANUAL_APPS_INPUT||'';const apps=raw.split(',').map((s)=>s.trim()).filter(Boolean);process.stdout.write(JSON.stringify(apps));")
+            echo "Manual apps input: $MANUAL_APPS_INPUT"
+          else
+            BASE_SHA="${{ github.event.before }}"
+            HEAD_SHA="${{ github.sha }}"
+
+            if [[ -z "$BASE_SHA" || "$BASE_SHA" == "0000000000000000000000000000000000000000" ]]; then
+              BASE_SHA=$(git rev-parse HEAD~1 2>/dev/null || git rev-list --max-parents=0 HEAD)
+            fi
+
+            # Force-push/rewrite can make github.event.before unreachable on runner.
+            if ! git cat-file -e "$BASE_SHA^{commit}" 2>/dev/null; then
+              echo "Base SHA not found on runner: $BASE_SHA"
+              BASE_SHA=$(git rev-parse HEAD~1 2>/dev/null || git rev-list --max-parents=0 HEAD)
+              echo "Falling back BASE_SHA to: $BASE_SHA"
+            fi
+
+            if ! git cat-file -e "$HEAD_SHA^{commit}" 2>/dev/null; then
+              echo "Head SHA not found on runner: $HEAD_SHA"
+              HEAD_SHA=$(git rev-parse HEAD)
+              echo "Falling back HEAD_SHA to: $HEAD_SHA"
+            fi
+
+            echo "Base SHA: $BASE_SHA"
+            echo "Head SHA: $HEAD_SHA"
+            set +e
+            NX_RAW=$(npx nx show projects --affected --type app --base="$BASE_SHA" --head="$HEAD_SHA" --json 2>&1)
+            NX_EXIT=$?
+            set -e
+            echo "NX Output: $NX_RAW"
+            echo "NX Exit: $NX_EXIT"
+
+            # Extract the last JSON array from mixed stdout/stderr output.
+            AFFECTED_JSON=$(NX_RAW="$NX_RAW" node -e "const raw=process.env.NX_RAW||'';const matches=raw.match(/\[[\s\S]*?\]/g)||[];for(let i=matches.length-1;i>=0;i--){try{const parsed=JSON.parse(matches[i]);if(Array.isArray(parsed)){process.stdout.write(JSON.stringify(parsed));process.exit(0);}}catch{}}process.stdout.write('[]');")
+
+            if [[ "$NX_EXIT" -ne 0 ]]; then
+              echo "nx returned non-zero; continuing with parsed/fallback affected apps"
+            fi
+          fi
+
+          DEPLOYABLE_JSON=$(AFFECTED_JSON="$AFFECTED_JSON" node -e "const fs=require('fs');const affected=JSON.parse(process.env.AFFECTED_JSON||'[]');const deployable=affected.filter((app)=>{const hasDockerfile=fs.existsSync('Dockerfile.'+app);const hasDeployment=fs.existsSync('k8s/base/'+app+'/deployment.yaml');const hasService=fs.existsSync('k8s/base/'+app+'/service.yaml');const valid=hasDockerfile&&hasDeployment&&hasService;console.error(\`\${app}: Dockerfile=\${hasDockerfile} deployment=\${hasDeployment} service=\${hasService} -> \${valid}\`);return valid;});process.stdout.write(JSON.stringify(deployable));")
+          COUNT=$(DEPLOYABLE_JSON="$DEPLOYABLE_JSON" node -e "const apps=JSON.parse(process.env.DEPLOYABLE_JSON||'[]');process.stdout.write(String(apps.length));")
+
+          echo "apps=$DEPLOYABLE_JSON" >> "$GITHUB_OUTPUT"
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+
+          echo "Affected apps: $AFFECTED_JSON"
+          echo "Deployable apps: $DEPLOYABLE_JSON"
+
   deploy:
+    needs: detect-affected
+    if: ${{ needs.detect-affected.outputs.count != '0' }}
     runs-on: ubuntu-latest
     environment: staging
 
     strategy:
       fail-fast: false
       matrix:
-        app:
-          - sniply-server
-          - sniply-auth
-          - sniply-website
-          - sniply-app
+        app: ${{ fromJson(needs.detect-affected.outputs.apps) }}
 
     steps:
       - name: Checkout
@@ -109,3 +184,11 @@ jobs:
           IMAGE_SHA="$REGISTRY_HOST/$REGISTRY_OWNER/$APP:$IMAGE_TAG"
           ssh "$VPS_USER@$VPS_HOST" "kubectl set image deployment/$APP $APP=$IMAGE_SHA -n $TARGET_NAMESPACE"
           ssh "$VPS_USER@$VPS_HOST" "kubectl rollout status deployment/$APP -n $TARGET_NAMESPACE --timeout=180s"
+
+  no-changes:
+    needs: detect-affected
+    if: ${{ needs.detect-affected.outputs.count == '0' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Nothing to deploy
+        run: echo "No deployable affected apps found."
